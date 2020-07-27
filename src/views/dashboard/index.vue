@@ -15,10 +15,13 @@ export default {
     ])
   },
   mounted: function() {
-    this.$store.dispatch('admin/getInfo')
-      .then(() => {
-        // console.log(this.$store.state)
-    })
+    if (!this.$store.state.admin.name){
+      console.log(123);
+      this.$store.dispatch('admin/getInfo')
+        .then(() => {
+          // console.log(this.$store.state)
+        })
+    }
   }
 }
 </script>
