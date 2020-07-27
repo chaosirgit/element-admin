@@ -13,6 +13,12 @@ export default {
     ...mapGetters([
       'name'
     ])
+  },
+  mounted: function() {
+    this.$store.dispatch('admin/getInfo')
+      .then(() => {
+        // console.log(this.$store.state)
+    })
   }
 }
 </script>

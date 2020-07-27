@@ -160,12 +160,25 @@ export const constantRoutes = [
     ]
   },
 
+  {
+    path: '/seller',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        name: '商户管理',
+        component: () => import('@/views/seller/index'),
+        meta: { title: '商户管理', icon: 'seller' }
+      }
+    ]
+  },
+
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
 
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
+  mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })
