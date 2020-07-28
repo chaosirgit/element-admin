@@ -1,17 +1,17 @@
 <template>
   <div class="app-container">
     <search
-        @search="fetchData"
-        :statusHidden="true"
+      :status-hidden="true"
+      @search="fetchData"
     />
     <el-row>
       <el-col>
         <el-button
-                class="filter-item"
-                style="margin-left: 10px;"
-                type="primary"
-                icon="el-icon-plus"
-                @click="handlerCreate"
+          class="filter-item"
+          style="margin-left: 10px;"
+          type="primary"
+          icon="el-icon-plus"
+          @click="handlerCreate"
         >
           添加
         </el-button>
@@ -41,9 +41,9 @@
         </template>
       </el-table-column>
       <!--<el-table-column class-name="status-col" label="状态" width="110" align="center">-->
-        <!--<template slot-scope="scope">-->
-          <!--<el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>-->
-        <!--</template>-->
+      <!--<template slot-scope="scope">-->
+      <!--<el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>-->
+      <!--</template>-->
       <!--</el-table-column>-->
       <el-table-column align="center" label="创建时间" width="200">
         <template slot-scope="scope">
@@ -63,43 +63,43 @@
     </el-table>
 
     <pagination
-            class="text-left"
-            v-show="total > 0"
-            :total="total"
-            :page.sync="listQuery.page"
-            :limit.sync="listQuery.limit"
-            @pagination="fetchData"
+      v-show="total > 0"
+      class="text-left"
+      :total="total"
+      :page.sync="listQuery.page"
+      :limit.sync="listQuery.limit"
+      @pagination="fetchData"
     />
 
     <el-dialog
-            :title="dialogStatus === 'create' ? '添加商户' : '编辑商户'"
-            :visible.sync="dialogFormVisible"
+      :title="dialogStatus === 'create' ? '添加商户' : '编辑商户'"
+      :visible.sync="dialogFormVisible"
     >
       <el-form
-              :model="seller"
+        :model="seller"
       >
         <div class="box-center">
           <el-upload
-                  action="http://waterhero.test/admin/v1/upload"
-                  class="avatar-uploader tex-center"
-                  name="file"
-                  :show-file-list="false"
-                  :on-success="handleAvatarSuccess"
-                  :headers="headers"
-                  ref="upload"
+            ref="upload"
+            action="http://waterhero.test/admin/v1/upload"
+            class="avatar-uploader tex-center"
+            name="file"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :headers="headers"
           >
-            <img v-if="seller.logo" :src="seller.logo" class="avatar" />
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            <img v-if="seller.logo" :src="seller.logo" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon" />
           </el-upload>
           <div class="text-center" style="margin-top:10px">
             上传商户LOGO(像素:651 x 651)
           </div>
         </div>
         <el-form-item label="商户名称" :label-width="formLabelWidth">
-          <el-input v-model="seller.name" autocomplete="off"></el-input>
+          <el-input v-model="seller.name" autocomplete="off" />
         </el-form-item>
         <!--<el-form-item label="商户LOGO" :label-width="formLabelWidth">-->
-          <!--<el-input v-model="seller.logo" autocomplete="off"></el-input>-->
+        <!--<el-input v-model="seller.logo" autocomplete="off"></el-input>-->
         <!--</el-form-item>-->
 
       </el-form>
@@ -109,13 +109,12 @@
       </div>
     </el-dialog>
 
-
     <el-dialog
-            title="提醒 "
-            :visible.sync="dialogHintVisible"
-            class="text-center"
-            center
-            width="30%"
+      title="提醒 "
+      :visible.sync="dialogHintVisible"
+      class="text-center"
+      center
+      width="30%"
     >
       <span class="text-center">
         此操作会删除商户，确定删除吗？
@@ -139,7 +138,7 @@ import Pagination from '@/components/Pagination' // secondary package based on e
 import Search from '@/components/Search'
 
 export default {
-  components: { Pagination,Search },
+  components: { Pagination, Search },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -155,9 +154,9 @@ export default {
       total: 0,
       list: null,
       listLoading: true,
-      listQuery : {
-        page:1,
-        limit:10,
+      listQuery: {
+        page: 1,
+        limit: 10,
         search: '',
         status: null,
         startTime: '',
@@ -173,6 +172,13 @@ export default {
         logo: ''
       },
       formLabelWidth: '120px'
+    }
+  },
+  computed: {
+    headers() {
+      return {
+        Authorization: this.$store.getters.token
+      }
     }
   },
   mounted() {
@@ -200,25 +206,25 @@ export default {
     createData() {
       console.log(this.seller)
       postAdd(this.seller).then(res => {
-        if (res.code === 200){
+        if (res.code === 200) {
           this.dialogFormVisible = false
           this.getList()
         }
       })
     },
-    edit(item,_index) {
-      console.log(item, _index);
+    edit(item, _index) {
+      console.log(item, _index)
       this.dialogFormVisible = true
       this.dialogStatus = 'update'
       this.seller = item
     },
-    del(item,_index) {
+    del(item, _index) {
       this.dialogHintVisible = true
       this.seller = item
     },
     updateData() {
       putEdit(this.seller).then(res => {
-        if (res.code === 200){
+        if (res.code === 200) {
           this.dialogFormVisible = false
           this.getList()
         }
@@ -234,17 +240,10 @@ export default {
     },
     handleAvatarSuccess(res, file) {
       this.$loading().close()
-      console.log(res);
+      console.log(res)
       this.seller.logo = res.data
-    },
+    }
 
-  },
-  computed: {
-    headers() {
-      return {
-        Authorization: this.$store.getters.token
-      }
-    },
   }
 }
 </script>
