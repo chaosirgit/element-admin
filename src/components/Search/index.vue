@@ -75,22 +75,6 @@
         </el-row>
 
 
-            <el-row>
-                <el-col>
-                    <el-button
-                            class="filter-item"
-                            style="margin-left: 10px;"
-                            type="primary"
-                            icon="el-icon-edit"
-                            @click="handleCreate"
-                            :class="{ addHidden: addHidden }"
-                    >
-                        添加
-                    </el-button>
-                </el-col>
-            </el-row>
-
-
         <!--</div>-->
     </el-row>
 </template>
@@ -99,10 +83,6 @@
     name: 'Search',
     props: {
       searchHidden: {
-        type: Boolean,
-        default: false
-      },
-      addHidden: {
         type: Boolean,
         default: false
       },
