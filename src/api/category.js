@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function postAdd(data) {
   return request({
-    url: 'seller',
+    url: 'categories',
     method: 'post',
     data
   })
@@ -10,7 +10,7 @@ export function postAdd(data) {
 
 export function putEdit(data) {
   return request({
-    url: 'seller',
+    url: 'categories',
     method: 'put',
     data
   })
@@ -26,7 +26,7 @@ export function getList(params) {
 
 export function delItem(params) {
   return request({
-    url: 'seller',
+    url: 'categories',
     method: 'delete',
     params
   })

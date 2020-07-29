@@ -40,10 +40,30 @@
       </div>
     </el-dialog>
 
+    <el-dialog
+      title="提醒 "
+      :visible.sync="dialogHintVisible"
+      class="text-center"
+      center
+      width="30%"
+    >
+      <span class="text-center">
+        此操作会直接删除分类，可能造成数据不匹配，确定删除吗？
+      </span>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogHintVisible = false">
+          取消
+        </el-button>
+        <el-button type="primary" @click="delData()">
+          确定
+        </el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 <script>
-import { getList } from '@/api/category'
+import { getList, putEdit, delItem, postAdd } from '@/api/category'
 
 export default {
 
@@ -53,6 +73,7 @@ export default {
       loading: false,
       dialogStatus: 'create',
       dialogFormVisible: false,
+      dialogHintVisible: false,
       formLabelWidth: '120px',
       editDisable: true,
       defaultProps: {
@@ -72,16 +93,18 @@ export default {
   },
   methods: {
     addCategory() {
+      console.log(this.needParentId)
       this.category = {}
       this.dialogFormVisible = true
+      this.dialogStatus = 'create'
     },
     editCategory() {
       console.log(this.needParentId)
-      this.category = this.$refs.tree.getCheckedNodes()[0]
       this.dialogFormVisible = true
+      this.dialogStatus = 'update'
     },
     deleteCategory() {
-      console.log(this.$refs.tree.getCheckedNodes())
+      this.dialogHintVisible = true
     },
     getList() {
       this.loading = true
@@ -94,16 +117,40 @@ export default {
     showOperation(evn, row, node, comp) {
       console.log(row, node, comp)
     },
-    needParentGet() {
-      console.log(this.$refs.tree.getCheckedNodes())
-      if (this.$refs.tree.getCheckedNodes().length > 0) {
-        this.needParentId = this.$refs.tree.getCheckedNodes()[0].id
-        this.category = this.$refs.tree.getCheckedNodes()[0]
+    needParentGet(item, check) {
+      if (check.checkedNodes.length > 0) {
+        this.needParentId = item.id
+        this.category = item
         this.editDisable = false
       } else {
         this.needParentId = 0
         this.editDisable = true
       }
+    },
+    createData() {
+      this.category.parent_id = this.needParentId
+      postAdd(this.category).then(res => {
+        if (res.code === 200) {
+          this.dialogFormVisible = false
+          this.getList()
+        }
+      })
+    },
+    updateData() {
+      putEdit(this.category).then(res => {
+        if (res.code === 200) {
+          this.dialogFormVisible = false
+          this.getList()
+        }
+      })
+    },
+    delData() {
+      delItem(this.category).then(res => {
+        if (res.code === 200) {
+          this.dialogHintVisible = false
+          this.getList()
+        }
+      })
     }
   }
 }
