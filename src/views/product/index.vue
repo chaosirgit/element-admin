@@ -25,19 +25,68 @@
       fit
       highlight-current-row
     >
+      <el-table-column type="expand" label="+">
+        <template slot-scope="props">
+          <el-form label-position="left" inline class="demo-table-expand">
+            <el-form-item label="封面/组图">
+              <el-image
+                style="width: 100px; height: 100px"
+                :src="props.row.img"
+                :preview-src-list="props.row.img_arr"
+              />
+            </el-form-item>
+            <el-form-item label="商品名称">
+              <span>{{ props.row.name }}</span>
+            </el-form-item>
+            <el-form-item label="所属商户">
+              <span>{{ props.row.seller_name }}</span>
+            </el-form-item>
+            <el-form-item label="商品 ID">
+              <span>{{ props.row.id }}</span>
+            </el-form-item>
+            <el-form-item label="商户 ID">
+              <span>{{ props.row.seller_id }}</span>
+            </el-form-item>
+            <el-form-item label="商品分类">
+              <span>{{ props.row.category_name }}</span>
+            </el-form-item>
+            <el-form-item label="商品描述">
+              <!--<span>{{ props.row.content }}</span>-->
+              <span v-html="props.row.content" />
+            </el-form-item>
+          </el-form>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="ID" width="95">
         <template slot-scope="scope">
           {{ scope.row.id }}
         </template>
       </el-table-column>
-      <el-table-column label="商户名称">
+      <el-table-column label="商品名称">
         <template slot-scope="scope">
           {{ scope.row.name }}
+        </template>
+      </el-table-column>
+      <el-table-column label="商品分类">
+        <template slot-scope="scope">
+          {{ scope.row.category_name }}
+        </template>
+      </el-table-column>
+      <el-table-column label="价格">
+        <template slot-scope="scope">
+          {{ scope.row.price }}
         </template>
       </el-table-column>
       <el-table-column align="center" label="排序权重" width="95">
         <template slot-scope="scope">
           {{ scope.row.sort }}
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="下架/上架" width="200">
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.is_up"
+          />
         </template>
       </el-table-column>
       <!--<el-table-column class-name="status-col" label="状态" width="110" align="center">-->
@@ -109,8 +158,9 @@
                 list-type="picture-card"
                 :on-success="imgArrAdd"
                 :on-remove="imgArrRemove"
-                :file-list="product.img_arr"
+                :file-list="product.img_list"
                 :headers="headers"
+                :multiple="true"
               >
                 <i class="el-icon-plus" />
               </el-upload>
@@ -138,6 +188,37 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row style="margin-bottom: 20px">
+          <el-col :span="12">
+            <el-form-item label="指定商户" :label-width="formLabelWidth">
+              <el-select
+                v-model="product.seller_id"
+                filterable
+                placeholder="请选择"
+                @change="selectSeller"
+              >
+                <el-option
+                  v-for="item in sellers"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="商品价格" :label-width="formLabelWidth">
+              <el-input-number v-model="product.price" :precision="2" :step="0.1" :min="0.00" style="width: 195px;" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row style="margin-bottom: 20px">
+          <el-col :span="24">
+            <el-form-item label="商品内容" :label-width="formLabelWidth">
+              <tinymce v-model="product.content" />
+            </el-form-item>
+          </el-col>
+        </el-row>
 
         <!--<el-form-item label="商户LOGO" :label-width="formLabelWidth">-->
         <!--<el-input v-model="seller.logo" autocomplete="off"></el-input>-->
@@ -158,7 +239,7 @@
       width="30%"
     >
       <span class="text-center">
-        此操作会删除商户，确定删除吗？
+        此操作会直接删除商品，可能会产生数据关联错误，确定删除吗？
       </span>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogHintVisible = false">
@@ -176,11 +257,13 @@
 <script>
 import { getList, postAdd, putEdit, delItem } from '@/api/product'
 import { getList as categoryGetList } from '@/api/category'
+import { getAll as sellerAllList } from '@/api/seller'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import Search from '@/components/Search'
+import Tinymce from '@/components/Tinymce'
 
 export default {
-  components: { Pagination, Search },
+  components: { Tinymce, Pagination, Search },
   data() {
     return {
       total: 0,
@@ -195,6 +278,7 @@ export default {
         endTime: ''
       },
       options: null,
+      sellers: null,
       dialogTableVisible: false,
       dialogFormVisible: false,
       dialogHintVisible: false,
@@ -204,11 +288,15 @@ export default {
         id: 0,
         name: '',
         category_id: 0,
-        seller_id: 0,
+        seller_id: null,
         img: '',
-        img_arr: null,
-        price: '',
-        content: ''
+        img_arr: [],
+        img_list: [],
+        price: '0.00',
+        content: '',
+        category_name: '',
+        seller_name: '',
+        is_up: 0
       },
       formLabelWidth: '120px'
     }
@@ -222,7 +310,6 @@ export default {
   },
   mounted() {
     this.fetchData()
-    this.fetchCategories()
   },
   methods: {
     getList() {
@@ -230,8 +317,9 @@ export default {
       getList(this.listQuery).then(response => {
         this.total = response.data.total
         this.list = response.data.data.map(item => {
-          item.img_arr = item.img_arr.map(url => {
-            return { url: url }
+          // 图片列表
+          item.img_list = item.img_arr.map(url => {
+            return { url }
           })
           return item
         })
@@ -252,12 +340,22 @@ export default {
         this.options = res.data
       })
     },
+    fetchSellers() {
+      sellerAllList().then(res => {
+        this.sellers = res.data
+      })
+    },
     handlerCreate() {
-      this.product = {}
+      this.fetchCategories()
+      this.fetchSellers()
+      this.product = { img: '' }
       this.dialogFormVisible = true
       this.dialogStatus = 'create'
     },
     createData() {
+      this.product.img_arr = this.product.img_list.map(img => {
+        return img.url
+      })
       console.log(this.product)
       postAdd(this.product).then(res => {
         if (res.code === 200) {
@@ -268,6 +366,8 @@ export default {
     },
     edit(item, _index) {
       console.log(item, _index)
+      this.fetchCategories()
+      this.fetchSellers()
       this.dialogFormVisible = true
       this.dialogStatus = 'update'
       this.product = item
@@ -277,6 +377,10 @@ export default {
       this.product = item
     },
     updateData() {
+      this.product.img_arr = this.product.img_list.map(img => {
+        return img.url
+      })
+      console.log(this.product)
       putEdit(this.product).then(res => {
         if (res.code === 200) {
           this.dialogFormVisible = false
@@ -292,7 +396,7 @@ export default {
         }
       })
     },
-    handleAvatarSuccess(res, file) {
+    handleAvatarSuccess(res) {
       this.$loading().close()
       console.log(res)
       this.product.img = res.data
@@ -300,17 +404,22 @@ export default {
     handleChange(val) {
       this.product.category_id = val
     },
-    imgArrAdd(res) {
+    imgArrAdd(res, file, fileList) {
       if (res.code === 200) {
-        this.product.img_arr = { url: res.data }
+        this.product.img_list.push({ url: res.data })
       }
-      console.log(this.product.img_arr)
+      console.log(file)
+      console.log(this.product.img_list)
     },
     imgArrRemove(file, fileList) {
-      console.log(fileList)
-      this.product.img_arr = fileList.map(item => {
-        return { url: item.url }
+      console.log(file)
+      this.product.img_list = this.product.img_list.filter(ele => {
+        return file.url !== ele.url
       })
+      console.log(this.product.img_list)
+    },
+    selectSeller(id) {
+      this.product.seller_id = id
     }
 
   }
@@ -344,5 +453,17 @@ export default {
             display: block;
             object-fit: cover;
         }
+    }
+    .demo-table-expand {
+      font-size: 0;
+    }
+    .demo-table-expand label {
+      width: 90px;
+      color: #99a9bf;
+    }
+    .demo-table-expand .el-form-item {
+      margin-right: 0;
+      margin-bottom: 0;
+      width: 50%;
     }
 </style>

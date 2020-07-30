@@ -24,6 +24,14 @@ export function getList(params) {
   })
 }
 
+export function getAll(params) {
+  return request({
+    url: 'seller/all',
+    method: 'get',
+    params
+  })
+}
+
 export function delItem(params) {
   return request({
     url: 'seller',
