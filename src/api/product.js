@@ -31,3 +31,11 @@ export function delItem(params) {
     params
   })
 }
+
+export function upCheck(params) {
+  return request({
+    url: 'product/up',
+    method: 'put',
+    params
+  })
+}

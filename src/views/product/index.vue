@@ -86,6 +86,10 @@
         <template slot-scope="scope">
           <el-switch
             v-model="scope.row.is_up"
+            v-loading="switchLoading"
+            :active-value="1"
+            :inactive-value="0"
+            @change="switchUp(scope.row.id)"
           />
         </template>
       </el-table-column>
@@ -255,7 +259,7 @@
 </template>
 
 <script>
-import { getList, postAdd, putEdit, delItem } from '@/api/product'
+import { getList, postAdd, putEdit, delItem, upCheck } from '@/api/product'
 import { getList as categoryGetList } from '@/api/category'
 import { getAll as sellerAllList } from '@/api/seller'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -266,6 +270,7 @@ export default {
   components: { Tinymce, Pagination, Search },
   data() {
     return {
+      switchLoading: true,
       total: 0,
       list: null,
       listLoading: true,
@@ -324,6 +329,13 @@ export default {
           return item
         })
         this.listLoading = false
+        this.switchLoading = false
+      })
+    },
+    switchUp(id) {
+      this.switchLoading = true
+      upCheck({ id: id }).then(res => {
+        this.switchLoading = false
       })
     },
     cancel() {
