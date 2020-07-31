@@ -102,6 +102,18 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/deliverer',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        name: '配送员管理',
+        component: () => import('@/views/deliverer/index'),
+        meta: { title: '配送员管理', icon: 'deliverer' }
+      }
+    ]
+  },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }

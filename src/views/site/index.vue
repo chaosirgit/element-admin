@@ -146,10 +146,13 @@
                 style="margin-left: 10px;"
                 type="primary"
                 icon="el-icon-location"
-                @click="handlerCreate"
+                @click="handlerSelectLocation"
               >
                 点击选择
               </el-button>
+              <div v-if="site.longitude && site.latitude" class="text-center" style="margin-top:10px">
+                经度： {{ site.longitude }} 纬度： {{ site.latitude }}
+              </div>
             </el-form-item>
           </el-col>
         </el-row>
@@ -173,7 +176,7 @@
       width="30%"
     >
       <span class="text-center">
-        此操作会直接删除商品，可能会产生数据关联错误，确定删除吗？
+        此操作会直接删除水站，可能会产生数据关联错误，确定删除吗？
       </span>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogHintVisible = false">
@@ -183,6 +186,24 @@
           确定
         </el-button>
       </div>
+    </el-dialog>
+
+    <el-dialog
+      title="选择位置 "
+      :visible.sync="dialogAMapVisible"
+      class="text-center"
+      center
+      width="70%"
+    >
+      <template>
+        <div class="amap-page-container">
+          <el-amap-search-box class="search-box" :search-option="searchOption" :on-search-result="onSearchResult" />
+          <el-amap vid="amapDemo" :center="mapCenter" :zoom="12" :events="events" class="amap-demo" style="height: 700px;">
+            <el-amap-marker v-for="marker in markers" :position="marker" />
+          </el-amap>
+        </div>
+      </template>
+
     </el-dialog>
   </div>
 
@@ -194,11 +215,29 @@ import { getAll as delivererAllList } from '@/api/deliverer'
 import { getAll as sellerAllList } from '@/api/seller'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import Search from '@/components/Search'
+import { AMapManager } from 'vue-amap'
+const amapManager = new AMapManager()
 
 export default {
   components: { Pagination, Search },
   data() {
     return {
+      searchOption: {
+        city: '郑州',
+        citylimit: false
+      },
+      amapManager,
+      zoom: 12,
+      events: {
+        'click': (e) => {
+          console.log(e)
+          this.site.longitude = e.lnglat.lng
+          this.site.latitude = e.lnglat.lat
+          this.markers = [[this.site.longitude, this.site.latitude]]
+        }
+      },
+      mapCenter: [113.601979, 34.794764],
+      markers: [],
       total: 0,
       list: null,
       listLoading: true,
@@ -217,6 +256,7 @@ export default {
       dialogFormVisible: false,
       dialogHintVisible: false,
       dialogVisible: false,
+      dialogAMapVisible: false,
       dialogStatus: 'create',
       site: {
         id: 0,
@@ -276,9 +316,12 @@ export default {
       this.site = { }
       this.dialogFormVisible = true
       this.dialogStatus = 'create'
+      this.mapCenter = [113.601979, 34.794764]
+      this.markers = []
     },
     createData() {
       console.log(this.site)
+      this.site.deliverer_id = this.site.op_id
       postAdd(this.site).then(res => {
         if (res.code === 200) {
           this.dialogFormVisible = false
@@ -288,22 +331,21 @@ export default {
     },
     edit(item, _index) {
       console.log(item, _index)
-      this.fetchCategories()
       this.fetchSellers()
+      this.fetchDeliverer()
       this.dialogFormVisible = true
       this.dialogStatus = 'update'
-      this.product = item
+      this.site = item
+      this.mapCenter = [this.site.longitude, this.site.latitude]
+      this.markers = [[this.site.longitude, this.site.latitude]]
     },
     del(item, _index) {
       this.dialogHintVisible = true
-      this.product = item
+      this.site = item
     },
     updateData() {
-      this.product.img_arr = this.product.img_list.map(img => {
-        return img.url
-      })
-      console.log(this.product)
-      putEdit(this.product).then(res => {
+      this.site.deliverer_id = this.site.op_id
+      putEdit(this.site).then(res => {
         if (res.code === 200) {
           this.dialogFormVisible = false
           this.getList()
@@ -311,7 +353,7 @@ export default {
       })
     },
     delData() {
-      delItem(this.product).then(res => {
+      delItem(this.site).then(res => {
         if (res.code === 200) {
           this.dialogHintVisible = false
           this.getList()
@@ -345,8 +387,16 @@ export default {
     },
     selectOp(id) {
       this.site.op_id = id
+    },
+    handlerSelectLocation() {
+      this.dialogAMapVisible = true
+    },
+    onSearchResult(pois) {
+      console.log(pois)
+      if (pois.length > 0) {
+        this.mapCenter = [pois[0].lng, pois[0].lat]
+      }
     }
-
   }
 }
 </script>
@@ -390,5 +440,18 @@ export default {
     margin-right: 0;
     margin-bottom: 0;
     width: 50%;
+  }
+  .amap-demo {
+    height: 700px;
+  }
+
+  .search-box {
+    position: absolute;
+    top: 25px;
+    left: 20px;
+  }
+
+  .amap-page-container {
+    position: relative;
   }
 </style>

@@ -32,6 +32,16 @@ import '@/icons' // icon
 // Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
 Vue.use(ElementUI)
+import VueAMap from 'vue-amap'
+Vue.use(VueAMap)
+// 初始化高德地图的 key 和插件
+VueAMap.initAMapApiLoader({
+  key: '99c11140c9132fd041d41ebd54995c08',
+  plugin: ['Autocomplete', 'PlaceSearch', 'Scale', 'OverView', 'ToolBar', 'MapType', 'PolyEditor', 'AMap.CircleEditor'],
+  // 默认高德 sdk 版本为 1.4.4
+  v: '1.4.4'
+})
+Vue.prototype.AMapManager = VueAMap
 
 Vue.config.productionTip = false
 
