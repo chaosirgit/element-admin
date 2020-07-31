@@ -90,6 +90,18 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/site',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        name: '水站管理',
+        component: () => import('@/views/site/index'),
+        meta: { title: '水站管理', icon: 'water-site' }
+      }
+    ]
+  },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
