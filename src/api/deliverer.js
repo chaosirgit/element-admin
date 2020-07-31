@@ -1,16 +1,8 @@
 import request from '@/utils/request'
 
-export function postAdd(data) {
+export function putMove(data) {
   return request({
-    url: 'seller',
-    method: 'post',
-    data
-  })
-}
-
-export function putEdit(data) {
-  return request({
-    url: 'seller',
+    url: 'deliverer/move',
     method: 'put',
     data
   })
@@ -18,7 +10,7 @@ export function putEdit(data) {
 
 export function getList(params) {
   return request({
-    url: 'seller',
+    url: 'deliverer',
     method: 'get',
     params
   })
@@ -28,14 +20,6 @@ export function getAll(params) {
   return request({
     url: 'deliverer/all',
     method: 'get',
-    params
-  })
-}
-
-export function delItem(params) {
-  return request({
-    url: 'seller',
-    method: 'delete',
     params
   })
 }
