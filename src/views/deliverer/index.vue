@@ -83,7 +83,6 @@
             placeholder="请选择"
             @change="selectSite"
           >
-            <el-option value="0" label="未绑定" />
             <el-option
               v-for="item in sites"
               :key="item.id"

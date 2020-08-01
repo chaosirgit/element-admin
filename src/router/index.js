@@ -91,6 +91,18 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/ticket',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        name: '水票管理',
+        component: () => import('@/views/ticket/index'),
+        meta: { title: '水票管理', icon: 'ticket' }
+      }
+    ]
+  },
+  {
     path: '/site',
     component: Layout,
     children: [
@@ -111,6 +123,18 @@ export const constantRoutes = [
         name: '配送员管理',
         component: () => import('@/views/deliverer/index'),
         meta: { title: '配送员管理', icon: 'deliverer' }
+      }
+    ]
+  },
+  {
+    path: '/plan',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        name: '活动管理',
+        component: () => import('@/views/plan/index'),
+        meta: { title: '活动管理', icon: 'plan' }
       }
     ]
   },

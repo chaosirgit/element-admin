@@ -77,6 +77,11 @@
           {{ scope.row.price }}
         </template>
       </el-table-column>
+      <el-table-column label="押金">
+        <template slot-scope="scope">
+          {{ scope.row.deposit }}
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="排序权重" width="95">
         <template slot-scope="scope">
           {{ scope.row.sort }}
@@ -213,6 +218,13 @@
           <el-col :span="12">
             <el-form-item label="商品价格" :label-width="formLabelWidth">
               <el-input-number v-model="product.price" :precision="2" :step="0.1" :min="0.00" style="width: 195px;" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row style="margin-bottom: 20px">
+          <el-col :span="12">
+            <el-form-item label="桶押金" :label-width="formLabelWidth">
+              <el-input-number v-model="product.deposit" :precision="2" :step="0.1" :min="0.00" style="width: 195px;" />
             </el-form-item>
           </el-col>
         </el-row>

@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function postAdd(data) {
   return request({
-    url: 'product',
+    url: 'plan',
     method: 'post',
     data
   })
@@ -10,7 +10,7 @@ export function postAdd(data) {
 
 export function putEdit(data) {
   return request({
-    url: 'product',
+    url: 'plan',
     method: 'put',
     data
   })
@@ -18,32 +18,40 @@ export function putEdit(data) {
 
 export function getList(params) {
   return request({
-    url: 'product',
+    url: 'plan',
     method: 'get',
-    params
-  })
-}
-
-export function delItem(params) {
-  return request({
-    url: 'product',
-    method: 'delete',
-    params
-  })
-}
-
-export function upCheck(params) {
-  return request({
-    url: 'product/up',
-    method: 'put',
     params
   })
 }
 
 export function getAll(params) {
   return request({
-    url: 'product/all',
+    url: 'plan/all',
     method: 'get',
+    params
+  })
+}
+
+export function planRelation(params) {
+  return request({
+    url: 'plan/relation',
+    method: 'put',
+    params
+  })
+}
+
+export function delItem(params) {
+  return request({
+    url: 'plan',
+    method: 'delete',
+    params
+  })
+}
+
+export function openCheck(params) {
+  return request({
+    url: 'plan/open',
+    method: 'put',
     params
   })
 }
