@@ -44,8 +44,8 @@
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
 
       <!--<div class="tips">-->
-        <!--<span style="margin-right:20px;">username: admin</span>-->
-        <!--<span> password: any</span>-->
+      <!--<span style="margin-right:20px;">username: admin</span>-->
+      <!--<span> password: any</span>-->
       <!--</div>-->
 
     </el-form>
@@ -109,10 +109,12 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('admin/login', this.loginForm).then(() => {
-            this.$router.push({ path: '/' })
-            // console.log(this.$store.user)
+          this.$store.dispatch('admin/login', this.loginForm).then(res => {
             this.loading = false
+            if (res.code === 200) {
+              this.$router.push({ path: '/' })
+            }
+            // console.log(this.$store.user)
           }).catch(() => {
             this.loading = false
           })
