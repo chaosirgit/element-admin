@@ -10,7 +10,7 @@
         :show-file-list="true"
         :on-success="handleSuccess"
         class="editor-slide-upload"
-        action="http://waterhero.test/admin/v1/upload"
+        action="https://sdx.test.huanweitao.com/admin/v1/upload"
         list-type="picture-card"
         :headers="headers"
       >
