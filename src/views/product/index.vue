@@ -373,6 +373,7 @@ export default {
       this.fetchCategories()
       this.fetchSellers()
       this.product = { img: '' }
+      this.product.img_list = []
       this.dialogFormVisible = true
       this.dialogStatus = 'create'
     },
