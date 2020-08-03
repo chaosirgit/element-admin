@@ -5,21 +5,22 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { getName } from '@/utils/auth'
 
 export default {
   name: 'Dashboard',
-  computed: {
-    ...mapGetters([
-      'name'
-    ])
+  data() {
+    return {
+      name: this.$store.state.admin.name
+    }
   },
   mounted: function() {
-    if (!this.$store.state.admin.name){
-      console.log(123);
+    console.log(this.name)
+    if (!this.name) {
       this.$store.dispatch('admin/getInfo')
         .then(() => {
           // console.log(this.$store.state)
+          this.name = getName()
         })
     }
   }

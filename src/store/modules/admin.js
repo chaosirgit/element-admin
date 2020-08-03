@@ -1,13 +1,13 @@
 import { login, logout, getInfo } from '@/api/admin'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken, setName, getName, setAvatar, getAvatar, removeName, removeAvatar } from '@/utils/auth'
 import { resetRouter } from '@/router'
 import { Message } from 'element-ui'
 
 const getDefaultState = () => {
   return {
     token: getToken(),
-    name: '',
-    avatar: ''
+    name: getName(),
+    avatar: getAvatar()
   }
 }
 
@@ -57,8 +57,11 @@ const actions = {
   getInfo({ commit, state }) {
     // return new Promise((resolve, reject) => {
     return getInfo().then(response => {
+      console.log(response)
       commit('SET_NAME', response.data.username)
       commit('SET_AVATAR', response.data.avatar || 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
+      setName(response.data.username)
+      setAvatar(response.data.avatar || 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
       // resolve(data)
     }).catch(error => {
       console.log(error)
@@ -76,6 +79,8 @@ const actions = {
     // return new Promise((resolve, reject) => {
     return logout(state.token).then(() => {
       removeToken() // must remove  token  first
+      removeName()
+      removeAvatar()
       resetRouter()
       commit('RESET_STATE')
     }).catch(error => {

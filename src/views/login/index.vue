@@ -113,6 +113,7 @@ export default {
             this.loading = false
             console.log(res)
             if (res.code === 200) {
+              this.$store.dispatch('admin/getInfo')
               this.$router.push({ path: '/' })
             }
             // console.log(this.$store.user)
