@@ -26,7 +26,7 @@ module.exports = {
    */
   publicPath: '/background',
   outputDir: 'dist',
-  assetsDir: 'static',
+  assetsDir: './static',
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
   devServer: {
