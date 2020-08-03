@@ -111,6 +111,7 @@ export default {
           this.loading = true
           this.$store.dispatch('admin/login', this.loginForm).then(res => {
             this.loading = false
+            console.log(res)
             if (res.code === 200) {
               this.$router.push({ path: '/' })
             }

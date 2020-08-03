@@ -81,7 +81,7 @@
         <div class="box-center">
           <el-upload
             ref="upload"
-            action="https://sdx.test.huanweitao.com/admin/v1/upload"
+            :action="uploadApi"
             class="avatar-uploader tex-center"
             name="file"
             :show-file-list="false"
@@ -151,6 +151,7 @@ export default {
   },
   data() {
     return {
+      uploadApi: process.env.VUE_APP_UPLOAD_API,
       total: 0,
       list: null,
       listLoading: true,
@@ -199,7 +200,7 @@ export default {
       this.getList()
     },
     handlerCreate() {
-      this.seller = {}
+      this.seller = { logo: '' }
       this.dialogFormVisible = true
       this.dialogStatus = 'create'
     },

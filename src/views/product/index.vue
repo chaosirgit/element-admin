@@ -143,7 +143,7 @@
             <div class="box-center">
               <el-upload
                 ref="upload"
-                action="https://sdx.test.huanweitao.com/admin/v1/upload"
+                :action="uploadApi"
                 class="avatar-uploader tex-center"
                 name="file"
                 :show-file-list="false"
@@ -163,7 +163,7 @@
           <el-col :span="24">
             <div class="box-center">
               <el-upload
-                action="https://sdx.test.huanweitao.com/admin/v1/upload"
+                :action="uploadApi"
                 list-type="picture-card"
                 :on-success="imgArrAdd"
                 :on-remove="imgArrRemove"
@@ -282,6 +282,7 @@ export default {
   components: { Tinymce, Pagination, Search },
   data() {
     return {
+      uploadApi: process.env.VUE_APP_UPLOAD_API,
       switchLoading: true,
       total: 0,
       list: null,
