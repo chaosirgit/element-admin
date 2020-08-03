@@ -10,7 +10,7 @@
         :show-file-list="true"
         :on-success="handleSuccess"
         class="editor-slide-upload"
-        action="https://sdx.test.huanweitao.com/admin/v1/upload"
+        :action="uploadApi"
         list-type="picture-card"
         :headers="headers"
       >
@@ -41,6 +41,7 @@ export default {
   },
   data() {
     return {
+      uploadApi: process.env.VUE_APP_UPLOAD_API,
       dialogVisible: false,
       listObj: {},
       fileList: [],
