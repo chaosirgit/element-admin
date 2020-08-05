@@ -99,15 +99,14 @@ export default {
     downloadLoading: {
       type: Boolean,
       default: false
+    },
+    statusList: {
+      type: Array,
+      default: Array
     }
   },
   data() {
     return {
-      statusList: [
-        { 'id': 1, 'name': 'success' },
-        { 'id': 2, 'name': 'error' },
-        { 'id': 3, 'name': 'exception' }
-      ],
       search: '',
       status: null,
       startTime: '',
@@ -115,38 +114,6 @@ export default {
     }
   },
   computed: {
-    // searchValue: {
-    //   get() {
-    //     return this.search
-    //   },
-    //   set(val) {
-    //     this.$emit('update:search', val)
-    //   }
-    // },
-    // statusValue: {
-    //   get() {
-    //     return this.status
-    //   },
-    //   set(val) {
-    //     this.$emit('update:status', val)
-    //   }
-    // },
-    // startTimeValue: {
-    //   get() {
-    //     return this.startTime
-    //   },
-    //   set(val) {
-    //     this.$emit('update:startTime', val)
-    //   }
-    // },
-    // endTimeValue: {
-    //   get() {
-    //     return this.endTime
-    //   },
-    //   set(val) {
-    //     this.$emit('update:endTime', val)
-    //   }
-    // }
   },
   methods: {
     handleFilter() {
