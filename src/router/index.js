@@ -162,6 +162,30 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/log',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        name: '用户日志',
+        component: () => import('@/views/log/index'),
+        meta: { title: '用户日志', icon: 'el-icon-notebook-1' }
+      }
+    ]
+  },
+  {
+    path: '/userTicket',
+    component: Layout,
+    children: [
+      {
+        path: 'userTicket',
+        name: '用户水票',
+        component: () => import('@/views/userTicket/index'),
+        meta: { title: '用户水票', icon: 'el-icon-s-ticket' }
+      }
+    ]
+  },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
