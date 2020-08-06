@@ -124,15 +124,14 @@
             <el-form-item label="指定站长" :label-width="formLabelWidth">
               <el-select
                 v-model="site.op_id"
-                filterable
                 placeholder="请选择"
                 @change="selectOp"
               >
                 <el-option
-                  v-for="item in deliverers"
-                  :key="item.id"
-                  :label="item.nickname"
-                  :value="item.id"
+                  v-for="raw in deliverers"
+                  :key="raw.id"
+                  :label="raw.phone || '未绑定手机号'"
+                  :value="raw.id"
                 />
               </el-select>
             </el-form-item>
@@ -251,7 +250,7 @@ export default {
       },
       options: null,
       sellers: null,
-      deliverers: null,
+      deliverers: [],
       dialogTableVisible: false,
       dialogFormVisible: false,
       dialogHintVisible: false,
@@ -336,6 +335,8 @@ export default {
       this.dialogFormVisible = true
       this.dialogStatus = 'update'
       this.site = item
+      console.log('deliverers', this.deliverers)
+      console.log('site', this.site)
       this.mapCenter = [this.site.longitude, this.site.latitude]
       this.markers = [[this.site.longitude, this.site.latitude]]
     },

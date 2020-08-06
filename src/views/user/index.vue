@@ -33,6 +33,16 @@
           {{ scope.row.phone }}
         </template>
       </el-table-column>
+      <el-table-column label="押金">
+        <template slot-scope="scope">
+          {{ scope.row.deposit }}
+        </template>
+      </el-table-column>
+      <el-table-column label="留存桶数">
+        <template slot-scope="scope">
+          {{ scope.row.pail_count }}
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="创建时间" width="200">
         <template slot-scope="scope">
           <i class="el-icon-time" />
