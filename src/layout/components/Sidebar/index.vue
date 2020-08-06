@@ -23,15 +23,25 @@ import { mapGetters } from 'vuex'
 import Logo from './Logo'
 import SidebarItem from './SidebarItem'
 import variables from '@/styles/variables.scss'
+import { getScopes as newGetScopes } from '@/api/admin'
 
 export default {
   components: { SidebarItem, Logo },
+  data() {
+    return {
+      modules: []
+    }
+  },
   computed: {
     ...mapGetters([
       'sidebar'
     ]),
     routes() {
-      return this.$router.options.routes
+      const newPath = this.$router.options.routes.filter(item => {
+        return this.modules.includes(item.path)
+      })
+      return newPath
+      // return this.$router.options.routes
     },
     activeMenu() {
       const route = this.$route
@@ -50,6 +60,16 @@ export default {
     },
     isCollapse() {
       return !this.sidebar.opened
+    }
+  },
+  created() {
+    this.getNewScopes()
+  },
+  methods: {
+    getNewScopes() {
+      newGetScopes().then(res => {
+        this.modules = res.data
+      })
     }
   }
 }

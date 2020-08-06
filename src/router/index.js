@@ -55,6 +55,30 @@ export const constantRoutes = [
     }]
   },
   {
+    path: '/admin',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        name: '管理员管理',
+        component: () => import('@/views/admin/index'),
+        meta: { title: '管理员管理', icon: 'el-icon-eleme' }
+      }
+    ]
+  },
+  {
+    path: '/role',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        name: '角色管理',
+        component: () => import('@/views/role/index'),
+        meta: { title: '角色管理', icon: 'role' }
+      }
+    ]
+  },
+  {
     path: '/seller',
     component: Layout,
     children: [
@@ -163,7 +187,7 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/log',
+    path: '/accountLog',
     component: Layout,
     children: [
       {
