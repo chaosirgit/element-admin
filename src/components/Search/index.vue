@@ -39,7 +39,7 @@
               value-format="yyyy-MM-dd"
             />
           </el-col>
-          <el-col class="line" :span="1">——</el-col>
+          <el-col class="line" :span="1">-</el-col>
           <el-col :span="11">
             <el-date-picker
               v-model="endTime"
