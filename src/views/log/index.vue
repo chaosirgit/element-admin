@@ -115,7 +115,9 @@ export default {
       },
       statusList: [
         { id: null, name: '全部类型' },
-        { id: 1, name: '购买水票' }
+        { id: 1, name: '购买水票' },
+        { id: 2, name: '使用水票' },
+        { id: 3, name: '桶押金' }
       ],
       options: null,
       sellers: null,
