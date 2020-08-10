@@ -148,6 +148,7 @@
                 v-model="plan.means"
                 filterable
                 placeholder="请选择"
+                disabled
                 @change="selectMeans"
               >
                 <el-option
@@ -168,12 +169,12 @@
         <el-row style="margin-bottom: 20px">
           <el-col :span="12">
             <el-form-item label="活动条件" :label-width="formLabelWidth">
-              <el-input-number v-model="plan.factor" :precision="2" :step="0.1" :min="0.00" style="width: 195px;" />
+              <el-input-number v-model="plan.factor" :precision="2" :step="1" :min="0.00" style="width: 195px;" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="活动结果" :label-width="formLabelWidth">
-              <el-input-number v-model="plan.effect" :precision="2" :step="0.1" :min="0.00" style="width: 195px;" />
+              <el-input-number v-model="plan.effect" :precision="2" :step="1" :min="0.00" style="width: 195px;" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -181,7 +182,7 @@
           <el-col :span="24">
             <el-form-item label="活动描述" :label-width="formLabelWidth">
               满 <span>{{ plan.factor }}</span> <span>{{ plan.model === "App\\Ticket" ? '水票数量' : '商品价格' }}</span>
-              <span> {{ plan.means === 1 ? '增' : '减' }}</span> <span>{{ plan.effect }}</span>
+              <span> {{ plan.means === 1 ? '送' : '减' }}</span> <span>{{ plan.effect }}</span>
             </el-form-item>
           </el-col>
         </el-row>
@@ -374,6 +375,11 @@ export default {
     selectModel(model) {
       console.log(model)
       this.plan.model = model
+      if (this.plan.model === 'App\\Ticket') {
+        this.plan.means = 1
+      } else {
+        this.plan.means = 0
+      }
     },
     selectMeans(means) {
       this.plan.means = means

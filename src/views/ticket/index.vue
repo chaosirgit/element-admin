@@ -291,6 +291,7 @@ export default {
       this.switchLoading = true
       openCheck({ id: id }).then(res => {
         this.switchLoading = false
+        this.getList()
       })
     },
     getProducts() {
