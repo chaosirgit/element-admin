@@ -45,9 +45,9 @@
           {{ scope.row.seller_name }}
         </template>
       </el-table-column>
-      <el-table-column label="站长昵称">
+      <el-table-column label="站长手机">
         <template slot-scope="scope">
-          {{ scope.row.op_name }}
+          {{ scope.row.op_phone }}
         </template>
       </el-table-column>
       <!--<el-table-column class-name="status-col" label="状态" width="110" align="center">-->
@@ -198,7 +198,7 @@
         <div class="amap-page-container">
           <el-amap-search-box class="search-box" :search-option="searchOption" :on-search-result="onSearchResult" />
           <el-amap vid="amapDemo" :center="mapCenter" :zoom="12" :events="events" class="amap-demo" style="height: 700px;">
-            <el-amap-marker v-for="marker in markers" :position="marker" />
+            <el-amap-marker v-for="(marker,index) in markers" :key="index" :position="marker" />
           </el-amap>
         </div>
       </template>
