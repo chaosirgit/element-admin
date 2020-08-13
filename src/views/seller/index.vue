@@ -98,6 +98,11 @@
         <el-form-item label="商户名称" :label-width="formLabelWidth">
           <el-input v-model="seller.name" autocomplete="off" />
         </el-form-item>
+        <el-form-item label="排序权重" :label-width="formLabelWidth">
+          <el-tooltip class="item" effect="dark" content="数字越大排序越前" placement="right-start">
+            <el-input-number v-model="seller.sort" autocomplete="off" />
+          </el-tooltip>
+        </el-form-item>
         <!--<el-form-item label="商户LOGO" :label-width="formLabelWidth">-->
         <!--<el-input v-model="seller.logo" autocomplete="off"></el-input>-->
         <!--</el-form-item>-->
@@ -170,7 +175,8 @@ export default {
       seller: {
         id: '',
         name: '',
-        logo: ''
+        logo: '',
+        sort: 0
       },
       formLabelWidth: '120px'
     }

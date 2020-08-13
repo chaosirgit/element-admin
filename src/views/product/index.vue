@@ -247,6 +247,16 @@
           </el-col>
         </el-row>
         <el-row style="margin-bottom: 20px">
+          <el-col :span="12">
+            <el-form-item label="排序权重" :label-width="formLabelWidth">
+              <el-tooltip class="item" effect="dark" content="数字越大排序越前" placement="right-start">
+                <el-input-number v-model="product.sort" autocomplete="off" />
+              </el-tooltip>
+
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row style="margin-bottom: 20px">
           <el-col :span="24">
             <el-form-item label="商品内容" :label-width="formLabelWidth">
               <tinymce v-model="product.content" />
