@@ -48,6 +48,31 @@
           :multiple="true"
         >
           <i class="el-icon-plus" />
+          <div slot="file" slot-scope="{file}">
+            <img
+              class="el-upload-list__item-thumbnail"
+              :src="file.url"
+              alt=""
+            >
+            <span class="el-upload-list__item-actions">
+              <el-tooltip class="item" effect="dark" :content="file.redirect || '暂无跳转链接'" placement="top">
+                <span
+                  v-if="true"
+                  class="el-upload-list__item-delete"
+                  @click="addRedirect(file)"
+                >
+                  <i class="el-icon-link" />
+                </span>
+              </el-tooltip>
+              <span
+                v-if="true"
+                class="el-upload-list__item-delete"
+                @click="imgArrRemove(file)"
+              >
+                <i class="el-icon-delete" />
+              </span>
+            </span>
+          </div>
         </el-upload>
         <div class="text-center" style="margin-top:10px">
           上传 Banner 图组<br>
@@ -56,6 +81,22 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogSettingVisible = false">取 消</el-button>
         <el-button type="primary" @click="updateData()">确 定</el-button>
+      </div>
+
+    </el-dialog>
+
+    <el-dialog
+      title="关联跳转"
+      :visible.sync="dialogAddRedirectVisible"
+      width="50%"
+    >
+
+      <div class="box-center">
+        <el-input v-model="redirect" placeholder="请输入跳转链接" />
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogAddRedirectVisible = false">取 消</el-button>
+        <el-button type="primary" @click="confirmRedirect()">确 定</el-button>
       </div>
 
     </el-dialog>
@@ -88,7 +129,10 @@ export default {
     return {
       dialogSettingVisible: false,
       uploadApi: process.env.VUE_APP_UPLOAD_API,
-      banner: []
+      banner: [],
+      dialogAddRedirectVisible: false,
+      current: {},
+      redirect: ''
     }
   },
   methods: {
@@ -102,7 +146,7 @@ export default {
     setting() {
       this.dialogSettingVisible = true
       getSetting().then(res => {
-        if (res.code === 200) {
+        if (res.code === 200 && res.data.banner !== undefined) {
           this.banner = JSON.parse(res.data.banner)
         }
       })
@@ -125,6 +169,23 @@ export default {
           this.dialogSettingVisible = false
         }
       })
+    },
+    addRedirect(file) {
+      this.redirect = ''
+      this.dialogAddRedirectVisible = true
+      this.current = file
+    },
+    confirmRedirect() {
+      console.log(this.redirect)
+      this.current.redirect = this.redirect
+      this.banner.map(ele => {
+        if (ele.url === this.current.url) {
+          ele.redirect = this.current.redirect
+          return ele
+        }
+      })
+      console.log(this.banner)
+      this.dialogAddRedirectVisible = false
     }
   }
 }

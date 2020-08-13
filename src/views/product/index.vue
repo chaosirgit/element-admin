@@ -227,6 +227,24 @@
               <el-input-number v-model="product.deposit" :precision="2" :step="0.1" :min="0.00" style="width: 195px;" />
             </el-form-item>
           </el-col>
+          <el-col :span="12">
+            <el-form-item label="商品标签" :label-width="formLabelWidth">
+              <el-input v-model="tag" placeholder="请输入内容" style="width: 195px;">
+                <el-button slot="append" icon="el-icon-circle-plus" @click="appendTag" />
+              </el-input>
+              <el-row>
+                <el-tag
+                  v-for="(item,index) in product.tags"
+                  :key="index"
+                  closable
+                  @close="removeTag(index)"
+                >
+                  {{ item }}
+                </el-tag>
+              </el-row>
+
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row style="margin-bottom: 20px">
           <el-col :span="24">
@@ -314,8 +332,10 @@ export default {
         content: '',
         category_name: '',
         seller_name: '',
-        is_up: 0
+        is_up: 0,
+        tags: []
       },
+      tag: '',
       formLabelWidth: '120px'
     }
   },
@@ -377,6 +397,8 @@ export default {
       this.product.img_list = []
       this.dialogFormVisible = true
       this.dialogStatus = 'create'
+      this.tag = ''
+      this.product.tags = []
     },
     createData() {
       this.product.img_arr = this.product.img_list.map(img => {
@@ -397,6 +419,7 @@ export default {
       this.dialogFormVisible = true
       this.dialogStatus = 'update'
       this.product = item
+      this.tag = ''
     },
     del(item, _index) {
       this.dialogHintVisible = true
@@ -446,6 +469,14 @@ export default {
     },
     selectSeller(id) {
       this.product.seller_id = id
+    },
+    appendTag() {
+      this.product.tags.push(this.tag)
+      this.tag = ''
+    },
+    removeTag(index) {
+      this.product.tags.splice(index, 1)
+      console.log(this.product.tags)
     }
 
   }
