@@ -50,6 +50,23 @@
             <el-form-item label="商品分类">
               <span>{{ props.row.category_name }}</span>
             </el-form-item>
+            <el-form-item label="商品标签">
+              <el-tag
+                v-for="(item,index) in props.row.tags"
+                :key="index"
+              >
+                {{ item }}
+              </el-tag>
+            </el-form-item>
+            <el-form-item label="关联水票">
+              <span>{{ props.row.ticket !== null ? props.row.ticket.name : '暂未关联' }}</span>
+            </el-form-item>
+            <el-form-item label="水票活动">
+              <span>{{ props.row.ticket !== null ? props.row.ticket.plan_format : '暂无活动' }}</span>
+            </el-form-item>
+            <el-form-item label="活动ID">
+              <span>{{ props.row.ticket !== null ? props.row.ticket.plan_id : '暂无活动' }}</span>
+            </el-form-item>
             <el-form-item label="商品描述">
               <!--<span>{{ props.row.content }}</span>-->
               <span v-html="props.row.content" />
@@ -80,6 +97,16 @@
       <el-table-column label="押金">
         <template slot-scope="scope">
           {{ scope.row.deposit }}
+        </template>
+      </el-table-column>
+      <el-table-column label="关联水票">
+        <template slot-scope="scope">
+          {{ scope.row.ticket !== null ? scope.row.ticket.name : '暂未关联' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="水票活动">
+        <template slot-scope="scope">
+          {{ scope.row.ticket !== null ? scope.row.ticket.plan_format : '暂无活动' }}
         </template>
       </el-table-column>
       <el-table-column align="center" label="排序权重" width="95">

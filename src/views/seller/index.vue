@@ -102,6 +102,7 @@
           <el-tooltip class="item" effect="dark" content="数字越大排序越前" placement="right-start">
             <el-input-number v-model="seller.sort" autocomplete="off" />
           </el-tooltip>
+
         </el-form-item>
         <!--<el-form-item label="商户LOGO" :label-width="formLabelWidth">-->
         <!--<el-input v-model="seller.logo" autocomplete="off"></el-input>-->

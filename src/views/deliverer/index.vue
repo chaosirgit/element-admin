@@ -23,11 +23,11 @@
       <!--<el-avatar :size="50" :src="scope.row.avatar" />-->
       <!--</template>-->
       <!--</el-table-column>-->
-      <!--<el-table-column label="昵称">-->
-      <!--<template slot-scope="scope">-->
-      <!--{{ scope.row.nickname }}-->
-      <!--</template>-->
-      <!--</el-table-column>-->
+      <el-table-column label="姓名">
+        <template slot-scope="scope">
+          {{ scope.row.name }}
+        </template>
+      </el-table-column>
       <el-table-column label="手机号">
         <template slot-scope="scope">
           {{ scope.row.phone }}
