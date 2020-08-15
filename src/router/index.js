@@ -81,6 +81,8 @@ export const constantRoutes = [
   {
     path: '/seller',
     component: Layout,
+    name: '商户与分类',
+    meta: { title: '商户与分类', icon: 'seller' },
     children: [
       {
         path: 'list',
@@ -88,44 +90,59 @@ export const constantRoutes = [
         component: () => import('@/views/seller/index'),
         meta: { title: '商户管理', icon: 'seller' }
       }
+      // },
+      // {
+      //   path: '/category',
+      //   name: '分类管理',
+      //   component: () => import('@/views/category/index'),
+      //   meta: { title: '分类管理', icon: 'el-icon-menu' }
+      // }
     ]
   },
-  {
-    path: '/category',
-    component: Layout,
-    children: [
-      {
-        path: 'list',
-        name: '分类管理',
-        component: () => import('@/views/category/index'),
-        meta: { title: '分类管理', icon: 'el-icon-menu' }
-      }
-    ]
-  },
+  // {
+  //   path: '/category',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'list',
+  //       name: '分类管理',
+  //       component: () => import('@/views/category/index'),
+  //       meta: { title: '分类管理', icon: 'el-icon-menu' }
+  //     }
+  //   ]
+  // },
   {
     path: '/product',
     component: Layout,
+    name: '商品与水票',
+    meta: { title: '商品与水票', icon: 'el-icon-present' },
     children: [
       {
         path: 'list',
         name: '商品管理',
         component: () => import('@/views/product/index'),
         meta: { title: '商品管理', icon: 'el-icon-present' }
-      }
-    ]
-  },
-  {
-    path: '/ticket',
-    component: Layout,
-    children: [
+      },
       {
-        path: 'list',
+        path: '/ticket',
         name: '水票管理',
         component: () => import('@/views/ticket/index'),
         meta: { title: '水票管理', icon: 'ticket' }
       }
     ]
   },
+  // {
+  //   path: '/ticket',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'list',
+  //       name: '水票管理',
+  //       component: () => import('@/views/ticket/index'),
+  //       meta: { title: '水票管理', icon: 'ticket' }
+  //     }
+  //   ]
+  // },
   {
     path: '/site',
     component: Layout,

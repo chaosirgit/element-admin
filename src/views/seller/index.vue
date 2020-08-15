@@ -52,9 +52,10 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="操作" width="200">
+      <el-table-column align="center" label="操作">
         <template slot-scope="scope">
           <div class="operation-buttons">
+            <el-button type="warning" @click="category(scope.row, scope.$index)">分类管理</el-button>
             <el-button type="primary" @click="edit(scope.row, scope.$index)">编辑</el-button>
             <el-button type="danger" @click="del(scope.row, scope.$index)">删除</el-button>
           </div>
@@ -134,6 +135,16 @@
         </el-button>
       </div>
     </el-dialog>
+
+    <el-dialog
+      title="分类"
+      :visible.sync="dialogCategoryVisible"
+      class="text-center"
+      center
+      width="60%"
+    >
+      <category :data="seller.categories" :seller-id="seller.id" @updateCategoryData="upCategory" />
+    </el-dialog>
   </div>
 
 </template>
@@ -142,9 +153,10 @@
 import { getList, postAdd, putEdit, delItem } from '@/api/seller'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import Search from '@/components/Search'
+import Category from '@/components/Category'
 
 export default {
-  components: { Pagination, Search },
+  components: { Pagination, Search, Category },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -172,12 +184,14 @@ export default {
       dialogTableVisible: false,
       dialogFormVisible: false,
       dialogHintVisible: false,
+      dialogCategoryVisible: false,
       dialogStatus: 'create',
       seller: {
         id: '',
         name: '',
         logo: '',
-        sort: 0
+        sort: 0,
+        categories: []
       },
       formLabelWidth: '120px'
     }
@@ -250,6 +264,13 @@ export default {
       this.$loading().close()
       console.log(res)
       this.seller.logo = res.data
+    },
+    category(item) {
+      this.dialogCategoryVisible = true
+      this.seller = item
+    },
+    upCategory(data) {
+      this.seller.categories = data
     }
 
   }

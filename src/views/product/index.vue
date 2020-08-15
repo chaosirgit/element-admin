@@ -418,7 +418,7 @@ export default {
       this.getList()
     },
     fetchCategories() {
-      categoryGetList().then(res => {
+      categoryGetList({ seller_id: this.product.seller_id }).then(res => {
         this.options = res.data
       })
     },
@@ -428,7 +428,6 @@ export default {
       })
     },
     handlerCreate() {
-      this.fetchCategories()
       this.fetchSellers()
       this.product = { img: '' }
       this.product.img_list = []
@@ -436,6 +435,7 @@ export default {
       this.dialogStatus = 'create'
       this.tag = ''
       this.product.tags = []
+      this.fetchCategories()
     },
     createData() {
       this.product.img_arr = this.product.img_list.map(img => {
@@ -451,12 +451,12 @@ export default {
     },
     edit(item, _index) {
       console.log(item, _index)
-      this.fetchCategories()
       this.fetchSellers()
       this.dialogFormVisible = true
       this.dialogStatus = 'update'
       this.product = item
       this.tag = ''
+      this.fetchCategories()
     },
     del(item, _index) {
       this.dialogHintVisible = true
@@ -506,6 +506,7 @@ export default {
     },
     selectSeller(id) {
       this.product.seller_id = id
+      this.fetchCategories()
     },
     appendTag() {
       this.product.tags.push(this.tag)
