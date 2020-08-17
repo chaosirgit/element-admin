@@ -23,6 +23,11 @@
           {{ scope.row.phone }}
         </template>
       </el-table-column>
+      <el-table-column label="身份" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.identity }}
+        </template>
+      </el-table-column>
       <el-table-column label="值" align="center">
         <template slot-scope="scope">
           <el-tag effect="dark" style="border: 0;" :type="scope.row.value > 0 ? 'danger' : 'success'">{{ scope.row.value }}</el-tag>
@@ -117,7 +122,9 @@ export default {
         { id: null, name: '全部类型' },
         { id: 1, name: '购买水票' },
         { id: 2, name: '使用水票' },
-        { id: 3, name: '桶押金' }
+        { id: 3, name: '桶押金' },
+        { id: 4, name: '配送员获得配送费' },
+        { id: 5, name: '配送员提现' }
       ],
       options: null,
       sellers: null,

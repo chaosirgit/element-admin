@@ -168,6 +168,18 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/cash',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        name: '提现管理',
+        component: () => import('@/views/cash/index'),
+        meta: { title: '提现管理', icon: 'el-icon-s-finance' }
+      }
+    ]
+  },
+  {
     path: '/user',
     component: Layout,
     children: [
