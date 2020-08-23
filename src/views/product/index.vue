@@ -289,6 +289,13 @@
           </el-col>
         </el-row>
         <el-row style="margin-bottom: 20px">
+          <el-col :span="12">
+            <el-form-item label="产品单位" :label-width="formLabelWidth">
+              <el-input v-model="product.quantifier" autocomplete="off" style="width: 195px;" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row style="margin-bottom: 20px">
           <el-col :span="24">
             <el-form-item label="商品内容" :label-width="formLabelWidth">
               <tinymce v-model="product.content" />
@@ -376,7 +383,8 @@ export default {
         seller_name: '',
         is_up: 0,
         tags: [],
-        delivery_price: 0
+        delivery_price: 0,
+        quantifier: ''
       },
       tag: '',
       formLabelWidth: '120px'

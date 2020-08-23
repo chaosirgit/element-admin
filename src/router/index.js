@@ -182,12 +182,20 @@ export const constantRoutes = [
   {
     path: '/user',
     component: Layout,
+    name: '用户管理',
+    meta: { title: '用户管理', icon: 'el-icon-present' },
     children: [
       {
         path: 'list',
-        name: '用户管理',
+        name: '用户',
         component: () => import('@/views/user/index'),
-        meta: { title: '用户管理', icon: 'el-icon-user-solid' }
+        meta: { title: '用户', icon: 'el-icon-user-solid' }
+      },
+      {
+        path: '/userTicket',
+        name: '用户水票',
+        component: () => import('@/views/userTicket/index'),
+        meta: { title: '用户水票', icon: 'el-icon-s-ticket' }
       }
     ]
   },
@@ -227,18 +235,18 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/userTicket',
-    component: Layout,
-    children: [
-      {
-        path: 'userTicket',
-        name: '用户水票',
-        component: () => import('@/views/userTicket/index'),
-        meta: { title: '用户水票', icon: 'el-icon-s-ticket' }
-      }
-    ]
-  },
+  // {
+  //   path: '/userTicket',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'userTicket',
+  //       name: '用户水票',
+  //       component: () => import('@/views/userTicket/index'),
+  //       meta: { title: '用户水票', icon: 'el-icon-s-ticket' }
+  //     }
+  //   ]
+  // },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
