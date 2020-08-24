@@ -235,6 +235,18 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/income',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        name: '收益帐号',
+        component: () => import('@/views/income/index'),
+        meta: { title: '收益帐号', icon: 'el-icon-notebook-1' }
+      }
+    ]
+  },
   // {
   //   path: '/userTicket',
   //   component: Layout,

@@ -4,19 +4,19 @@
       :status-hidden="true"
       @search="fetchData"
     />
-    <el-row>
-      <el-col>
-        <el-button
-          class="filter-item"
-          style="margin-left: 10px;"
-          type="primary"
-          icon="el-icon-plus"
-          @click="handlerCreate"
-        >
-          添加
-        </el-button>
-      </el-col>
-    </el-row>
+    <!--<el-row>-->
+    <!--<el-col>-->
+    <!--<el-button-->
+    <!--class="filter-item"-->
+    <!--style="margin-left: 10px;"-->
+    <!--type="primary"-->
+    <!--icon="el-icon-plus"-->
+    <!--@click="handlerCreate"-->
+    <!--&gt;-->
+    <!--添加-->
+    <!--</el-button>-->
+    <!--</el-col>-->
+    <!--</el-row>-->
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -24,6 +24,7 @@
       border
       fit
       highlight-current-row
+      style="margin-top: 20px;"
     >
       <el-table-column align="center" label="ID" width="95">
         <template slot-scope="scope">
@@ -93,7 +94,6 @@
       :title="'通过审核'"
       :visible.sync="dialogFormVisible"
       width="80%"
-      @close="cancel"
     >
       <el-form
         :model="cash"
