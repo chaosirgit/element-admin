@@ -212,6 +212,18 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/coupon',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        name: '优惠券管理',
+        component: () => import('@/views/coupon/index'),
+        meta: { title: '优惠券管理', icon: 'el-icon-s-ticket' }
+      }
+    ]
+  },
+  {
     path: '/order',
     component: Layout,
     children: [
