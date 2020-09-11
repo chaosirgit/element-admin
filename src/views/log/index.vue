@@ -124,7 +124,12 @@ export default {
         { id: 2, name: '使用水票' },
         { id: 3, name: '桶押金' },
         { id: 4, name: '配送员获得配送费' },
-        { id: 5, name: '配送员提现' }
+        { id: 5, name: '配送员提现' },
+        { id: 6, name: '拒绝提现退回' },
+        { id: 7, name: '站长收益' },
+        { id: 8, name: '结算收益帐号' },
+        { id: 9, name: '收益帐号收益' },
+        { id: 10, name: '分享收益' }
       ],
       options: null,
       sellers: null,

@@ -77,6 +77,12 @@
         <div class="text-center" style="margin-top:10px">
           上传 Banner 图组<br>
         </div>
+        <div class="text-center" style="margin-top:20px;">
+          分享分佣比例:
+          <el-input v-model="ratio" :min="1" :max="100" type="number">
+            <template slot="append">%</template>
+          </el-input>
+        </div>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogSettingVisible = false">取 消</el-button>
@@ -108,6 +114,7 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import { postAdd, getSetting } from '@/api/setting'
+import { Message } from 'element-ui'
 
 export default {
   components: {
@@ -132,7 +139,8 @@ export default {
       banner: [],
       dialogAddRedirectVisible: false,
       current: {},
-      redirect: ''
+      redirect: '',
+      ratio: 0
     }
   },
   methods: {
@@ -148,12 +156,19 @@ export default {
       getSetting().then(res => {
         if (res.code === 200 && res.data.banner !== undefined) {
           this.banner = JSON.parse(res.data.banner)
+          this.ratio = res.data.income_ratio
         }
       })
     },
     imgArrAdd(res, file, fileList) {
       if (res.code === 200) {
         this.banner.push({ url: res.data })
+      } else {
+        Message({
+          message: res.message || 'Error',
+          type: 'error',
+          duration: 5 * 1000
+        })
       }
     },
     imgArrRemove(file, fileList) {
@@ -163,7 +178,7 @@ export default {
     },
     updateData() {
       this.$loading()
-      postAdd({ banner: JSON.stringify(this.banner) }).then(res => {
+      postAdd({ banner: JSON.stringify(this.banner), income_ratio: this.ratio }).then(res => {
         this.$loading().close()
         if (res.code === 200) {
           this.dialogSettingVisible = false
