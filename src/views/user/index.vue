@@ -4,7 +4,19 @@
       :status-hidden="true"
       @search="fetchData"
     />
-    <el-row />
+    <el-row>
+      <el-col>
+        <el-button
+          class="filter-item"
+          style="margin-left: 10px;"
+          type="primary"
+          icon="el-icon-plus"
+          @click="handlerCreate"
+        >
+          添加
+        </el-button>
+      </el-col>
+    </el-row>
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -50,13 +62,13 @@
         </template>
       </el-table-column>
 
-      <!--<el-table-column align="center" label="操作" width="200">-->
-      <!--<template slot-scope="scope">-->
-      <!--<div class="operation-buttons">-->
-      <!--<el-button type="primary" @click="edit(scope.row, scope.$index)">调度水站</el-button>-->
-      <!--</div>-->
-      <!--</template>-->
-      <!--</el-table-column>-->
+      <el-table-column align="center" label="操作" width="200">
+        <template slot-scope="scope">
+          <div class="operation-buttons">
+            <el-button type="primary" @click="edit(scope.row, scope.$index)">编辑</el-button>
+          </div>
+        </template>
+      </el-table-column>
     </el-table>
 
     <pagination
@@ -68,41 +80,49 @@
       @pagination="fetchData"
     />
 
-    <!--<el-dialog-->
-    <!--:title="dialogStatus === 'create' ? '添加' : '调度配送员'"-->
-    <!--:visible.sync="dialogFormVisible"-->
-    <!--&gt;-->
-    <!--<el-form-->
-    <!--:model="deliverer"-->
-    <!--&gt;-->
-    <!--<el-form-item label="选择水站" :label-width="formLabelWidth">-->
-    <!--<el-select-->
-    <!--v-model="deliverer.site_id"-->
-    <!--filterable-->
-    <!--placeholder="请选择"-->
-    <!--@change="selectSite"-->
-    <!--&gt;-->
-    <!--<el-option-->
-    <!--v-for="item in sites"-->
-    <!--:key="item.id"-->
-    <!--:label="item.name"-->
-    <!--:value="item.id"-->
-    <!--/>-->
-    <!--</el-select>-->
-    <!--</el-form-item>-->
-
-    <!--</el-form>-->
-    <!--<div slot="footer" class="dialog-footer">-->
-    <!--<el-button @click="dialogFormVisible = false">取 消</el-button>-->
-    <!--<el-button type="primary" @click="dialogStatus === 'create' ? createData() : updateData()">确 定</el-button>-->
-    <!--</div>-->
-    <!--</el-dialog>-->
+    <el-dialog
+      :title="dialogStatus === 'create' ? '添加' : '编辑'"
+      :visible.sync="dialogFormVisible"
+    >
+      <el-form
+        :model="user"
+      >
+        <el-row style="margin-bottom: 20px">
+          <el-col :span="12">
+            <el-form-item label="用户手机号" :label-width="formLabelWidth">
+              <el-input v-model="user.phone" autocomplete="off" style="width: 195px;" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="用户押金" :label-width="formLabelWidth">
+              <el-input-number v-model="user.deposit" :precision="2" :step="0.1" :min="0.00" style="width: 195px;" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row style="margin-bottom: 20px">
+          <el-col :span="12">
+            <el-form-item label="留存桶数" :label-width="formLabelWidth">
+              <el-input-number v-model="user.pail_count" :precision="0" :step="1" :min="0" style="width: 195px;" />
+            </el-form-item>
+          </el-col>
+          <!--<el-col :span="12">-->
+          <!--<el-form-item label="用户押金" :label-width="formLabelWidth">-->
+          <!--<el-input-number v-model="user.deposit" :precision="2" :step="0.1" :min="0.00" style="width: 195px;" />-->
+          <!--</el-form-item>-->
+          <!--</el-col>-->
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogStatus === 'create' ? createData() : updateData()">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 
 </template>
 
 <script>
-import { getList } from '@/api/consumer'
+import { getList, postAdd, putEdit } from '@/api/consumer'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import Search from '@/components/Search'
 
@@ -125,9 +145,11 @@ export default {
       dialogFormVisible: false,
       dialogHintVisible: false,
       dialogStatus: 'update',
-      deliverer: {
+      user: {
         id: '',
-        site_id: 0
+        phone: '',
+        deposit: 0,
+        pail_count: 0
       },
       sites: [],
       formLabelWidth: '120px'
@@ -156,6 +178,35 @@ export default {
       this.listQuery = Object.assign(this.listQuery, query)
       console.log(this.listQuery)
       this.getList()
+    },
+    handlerCreate() {
+      this.user = {}
+      this.dialogFormVisible = true
+      this.dialogStatus = 'create'
+    },
+    createData() {
+      console.log(this.user)
+      postAdd(this.user).then(res => {
+        if (res.code === 200) {
+          this.dialogFormVisible = false
+          this.getList()
+        }
+      })
+    },
+    edit(item, _index) {
+      console.log(item, _index)
+      this.dialogFormVisible = true
+      this.dialogStatus = 'update'
+      this.user = item
+    },
+    updateData() {
+      console.log(this.user)
+      putEdit(this.user).then(res => {
+        if (res.code === 200) {
+          this.dialogFormVisible = false
+          this.getList()
+        }
+      })
     }
 
   }
