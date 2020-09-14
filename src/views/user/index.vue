@@ -55,6 +55,11 @@
           {{ scope.row.pail_count }}
         </template>
       </el-table-column>
+      <el-table-column label="积分">
+        <template slot-scope="scope">
+          {{ scope.row.integral }}
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="创建时间" width="200">
         <template slot-scope="scope">
           <i class="el-icon-time" />
