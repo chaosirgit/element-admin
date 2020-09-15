@@ -259,6 +259,18 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/invoice',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        name: '发票管理',
+        component: () => import('@/views/invoice/index'),
+        meta: { title: '发票管理', icon: 'el-icon-money' }
+      }
+    ]
+  },
   // {
   //   path: '/userTicket',
   //   component: Layout,
