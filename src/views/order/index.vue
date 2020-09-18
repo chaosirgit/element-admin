@@ -114,7 +114,7 @@
       </el-table-column>
       <el-table-column label="订单状态" align="center">
         <template slot-scope="scope">
-          <el-tag effect="dark" style="border: 0;" :color="scope.row.status === 0 ? '#000000' : scope.row.status === 1 ? '#909399' : scope.row.status === 2 ? '#67C23A' : scope.row.status === 3 ? '#E6A23C' : scope.row.status === 4 ? '#F56C6C' : scope.row.status === 5 ? '#409EFF' : '#FFFFFF'">
+          <el-tag effect="dark" style="border: 0;" :color="scope.row.status === 0 ? '#000000' : scope.row.status === 1 ? '#909399' : scope.row.status === 2 ? '#67C23A' : scope.row.status === 3 ? '#E6A23C' : scope.row.status === 4 ? '#F56C6C' : scope.row.status === 5 ? '#409EFF' : scope.row.status === 6 ? '#d1ba74' : '#FFFFFF'">
             {{ scope.row.status_name }}</el-tag>
         </template>
       </el-table-column>
@@ -212,6 +212,7 @@ export default {
         { id: 2, name: '已支付-待派单' },
         { id: 3, name: '已派单-待取货' },
         { id: 4, name: '已取货-配送中' },
+        { id: 6, name: '待签收' },
         { id: 5, name: '已完成' }
       ],
       options: null,
