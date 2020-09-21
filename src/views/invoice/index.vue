@@ -41,6 +41,11 @@
           {{ scope.row.email }}
         </template>
       </el-table-column>
+      <el-table-column label="手机号">
+        <template slot-scope="scope">
+          {{ scope.row.phone }}
+        </template>
+      </el-table-column>
       <el-table-column label="公司名称">
         <template slot-scope="scope">
           {{ scope.row.company_name }}
