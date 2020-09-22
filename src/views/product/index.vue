@@ -94,6 +94,11 @@
           {{ scope.row.price }}
         </template>
       </el-table-column>
+      <el-table-column label="库存">
+        <template slot-scope="scope">
+          {{ scope.row.stock }}
+        </template>
+      </el-table-column>
       <el-table-column label="押金">
         <template slot-scope="scope">
           {{ scope.row.deposit }}
@@ -294,6 +299,11 @@
               <el-input v-model="product.quantifier" autocomplete="off" style="width: 195px;" />
             </el-form-item>
           </el-col>
+          <el-col :span="12">
+            <el-form-item label="库存" :label-width="formLabelWidth">
+              <el-input-number v-model="product.stock" :precision="0" :step="1" style="width: 195px;" />
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row style="margin-bottom: 20px">
           <el-col :span="24">
@@ -384,7 +394,8 @@ export default {
         is_up: 0,
         tags: [],
         delivery_price: 0,
-        quantifier: ''
+        quantifier: '',
+        stock: 0
       },
       tag: '',
       formLabelWidth: '120px'
