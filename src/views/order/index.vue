@@ -24,13 +24,13 @@
             <!--/>-->
             <!--</el-form-item>-->
             <el-form-item label="收货人名称">
-              <span>{{ props.row.user_address.name }}</span>
+              <span>{{ props.row.user_address_name }}</span>
             </el-form-item>
             <el-form-item label="收货人地址">
-              <span>{{ props.row.user_address.province_name + props.row.user_address.city_name + props.row.user_address.county_name + props.row.user_address.detail_address }}</span>
+              <span>{{ props.row.user_address_format }}</span>
             </el-form-item>
             <el-form-item label="收货人手机">
-              <el-tag color="#000000" style="border: 0" effect="dark">{{ props.row.user_address.mobile }}</el-tag>
+              <el-tag color="#000000" style="border: 0" effect="dark">{{ props.row.user_address_mobile }}</el-tag>
             </el-form-item>
             <el-form-item label="支付时间">
               <span>{{ props.row.pay_at || '未支付' }}</span>

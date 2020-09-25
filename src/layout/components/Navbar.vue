@@ -99,6 +99,8 @@
 
       <div class="box-center">
         <el-input v-model="redirect" placeholder="请输入跳转链接" />
+        <el-radio v-model="urlType" label="url">链接</el-radio>
+        <el-radio v-model="urlType" label="miniProgram">小程序</el-radio>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogAddRedirectVisible = false">取 消</el-button>
@@ -140,7 +142,8 @@ export default {
       dialogAddRedirectVisible: false,
       current: {},
       redirect: '',
-      ratio: 0
+      ratio: 0,
+      urlType: 'url'
     }
   },
   methods: {
@@ -186,16 +189,19 @@ export default {
       })
     },
     addRedirect(file) {
-      this.redirect = ''
+      this.redirect = file.redirect || ''
+      this.urlType = file.urlType || 'url'
       this.dialogAddRedirectVisible = true
       this.current = file
     },
     confirmRedirect() {
       console.log(this.redirect)
       this.current.redirect = this.redirect
+      this.current.urlType = this.urlType
       this.banner.map(ele => {
         if (ele.url === this.current.url) {
           ele.redirect = this.current.redirect
+          ele.urlType = this.current.urlType
           return ele
         }
       })
