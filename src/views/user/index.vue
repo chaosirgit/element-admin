@@ -77,7 +77,7 @@
 
           <div class="operation-buttons">
             <el-button type="warning" size="small" @click="userPlan(scope.row, scope.$index)">特有活动</el-button>
-            <el-button type="danger" size="small" @click="edit(scope.row, scope.$index)">调节水票</el-button>
+            <!--<el-button type="danger" size="small" @click="edit(scope.row, scope.$index)">调节水票</el-button>-->
             <el-button type="primary" size="small" @click="edit(scope.row, scope.$index)">编辑</el-button>
           </div>
         </template>
@@ -142,6 +142,7 @@
           <el-select slot="prepend" v-model="item.plan_id" placeholder="请选择" style="width: 150px;">
             <el-option v-for="plan in userPlans" :key="plan.id" :label="plan.name" :value="plan.id" />
           </el-select>
+          <el-button slot="append" icon="el-icon-delete" @click="deleteEle(index)" />
         </el-input>
       </div>
       <div slot="footer" class="dialog-footer">
@@ -284,6 +285,11 @@ export default {
     cancelSpecies() {
       this.dialogPlanVisible = false
       this.getList()
+    },
+    deleteEle(index) {
+      this.user.special_plan = this.userPlans.filter((item, key) => {
+        return index !== key
+      })
     }
 
   }
