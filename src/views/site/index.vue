@@ -138,7 +138,7 @@
           </el-col>
         </el-row>
         <el-row style="margin-bottom: 20px">
-          <el-col :span="24">
+          <el-col :span="12">
             <el-form-item label="选择地点" :label-width="formLabelWidth">
               <el-button
                 class="filter-item"
@@ -152,6 +152,22 @@
               <div v-if="site.longitude && site.latitude" class="text-center" style="margin-top:10px">
                 经度： {{ site.longitude }} 纬度： {{ site.latitude }}
               </div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="选择收益帐号" :label-width="formLabelWidth">
+              <el-select
+                v-model="site.income_id"
+                placeholder="请选择"
+                @change="selectIncome"
+              >
+                <el-option
+                  v-for="raw in incomes"
+                  :key="raw.id"
+                  :label="raw.name || ''"
+                  :value="raw.id"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -212,6 +228,7 @@
 import { getList, postAdd, putEdit, delItem } from '@/api/site'
 import { getAll as delivererAllList } from '@/api/deliverer'
 import { getAll as sellerAllList } from '@/api/seller'
+import { getAll as incomeAllList } from '@/api/income'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import Search from '@/components/Search'
 import { AMapManager } from 'vue-amap'
@@ -251,6 +268,7 @@ export default {
       options: null,
       sellers: null,
       deliverers: [],
+      incomes: [],
       dialogTableVisible: false,
       dialogFormVisible: false,
       dialogHintVisible: false,
@@ -266,7 +284,8 @@ export default {
         longitude: '',
         latitude: '',
         op_name: '',
-        op_id: 0
+        op_id: 0,
+        income_id: 0
       },
       formLabelWidth: '120px'
     }
@@ -309,9 +328,15 @@ export default {
         this.deliverers = res.data
       })
     },
+    fetchIncomes() {
+      incomeAllList().then(res => {
+        this.incomes = res.data
+      })
+    },
     handlerCreate() {
       this.fetchSellers()
       this.fetchDeliverer()
+      this.fetchIncomes()
       this.site = { }
       this.dialogFormVisible = true
       this.dialogStatus = 'create'
@@ -332,9 +357,16 @@ export default {
       console.log(item, _index)
       this.fetchSellers()
       this.fetchDeliverer()
+      this.fetchIncomes()
       this.dialogFormVisible = true
       this.dialogStatus = 'update'
       this.site = item
+      if (this.site.income_id === 0) {
+        this.site.income_id = null
+      }
+      if (this.site.op_id === 0) {
+        this.site.op_id = null
+      }
       console.log('deliverers', this.deliverers)
       console.log('site', this.site)
       this.mapCenter = [this.site.longitude, this.site.latitude]
@@ -388,6 +420,9 @@ export default {
     },
     selectOp(id) {
       this.site.op_id = id
+    },
+    selectIncome(id) {
+      this.site.income_id = id
     },
     handlerSelectLocation() {
       this.dialogAMapVisible = true

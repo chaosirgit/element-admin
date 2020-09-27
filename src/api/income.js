@@ -24,11 +24,11 @@ export function getList(params) {
   })
 }
 
-export function postSettle(data) {
+export function getAll(params) {
   return request({
-    url: 'income/settle',
-    method: 'post',
-    data
+    url: 'income/all',
+    method: 'get',
+    params
   })
 }
 

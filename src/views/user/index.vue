@@ -60,6 +60,11 @@
           {{ scope.row.integral }}
         </template>
       </el-table-column>
+      <el-table-column label="新老用户">
+        <template slot-scope="scope">
+          {{ scope.row.is_old === 1 ? '老用户' : '新用户' }}
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="创建时间" width="200">
         <template slot-scope="scope">
           <i class="el-icon-time" />
@@ -67,10 +72,13 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="操作" width="200">
+      <el-table-column align="center" label="操作" width="300">
         <template slot-scope="scope">
+
           <div class="operation-buttons">
-            <el-button type="primary" @click="edit(scope.row, scope.$index)">编辑</el-button>
+            <el-button type="warning" size="small" @click="userPlan(scope.row, scope.$index)">特有活动</el-button>
+            <el-button type="danger" size="small" @click="edit(scope.row, scope.$index)">调节水票</el-button>
+            <el-button type="primary" size="small" @click="edit(scope.row, scope.$index)">编辑</el-button>
           </div>
         </template>
       </el-table-column>
@@ -122,6 +130,25 @@
         <el-button type="primary" @click="dialogStatus === 'create' ? createData() : updateData()">确 定</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog
+      title="特有活动"
+      :visible.sync="dialogPlanVisible"
+    >
+      <el-button size="medium" icon="el-icon-plus" type="primary" @click="appendEle" />
+
+      <div v-for="(item , index) in user.special_plan" :key="index">
+        <el-input v-model="item.special_count" placeholder="请输入额外活动赠送数量" class="input-with-select">
+          <el-select slot="prepend" v-model="item.plan_id" placeholder="请选择" style="width: 150px;">
+            <el-option v-for="plan in userPlans" :key="plan.id" :label="plan.name" :value="plan.id" />
+          </el-select>
+        </el-input>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cancelSpecies">取 消</el-button>
+        <el-button type="primary" @click="setSpecies">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 
 </template>
@@ -130,6 +157,7 @@
 import { getList, postAdd, putEdit } from '@/api/consumer'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import Search from '@/components/Search'
+import { getAll as planAll } from '@/api/plan'
 
 export default {
   components: { Pagination, Search },
@@ -149,12 +177,16 @@ export default {
       dialogTableVisible: false,
       dialogFormVisible: false,
       dialogHintVisible: false,
+      dialogPlanVisible: false,
       dialogStatus: 'update',
+      plans: [],
+      userPlans: [],
       user: {
         id: '',
         phone: '',
         deposit: 0,
-        pail_count: 0
+        pail_count: 0,
+        special_plan: []
       },
       sites: [],
       formLabelWidth: '120px'
@@ -169,6 +201,7 @@ export default {
   },
   mounted() {
     this.fetchData()
+    this.fetchPlans()
   },
   methods: {
     getList() {
@@ -177,6 +210,13 @@ export default {
         this.total = response.data.total
         this.list = response.data.data
         this.listLoading = false
+      })
+    },
+    fetchPlans() {
+      planAll().then(res => {
+        if (res.code === 200) {
+          this.plans = res.data
+        }
       })
     },
     fetchData(query) {
@@ -212,6 +252,38 @@ export default {
           this.getList()
         }
       })
+    },
+    userPlan(item, _index) {
+      this.user = item
+      this.userPlans = this.plans
+      this.dialogPlanVisible = true
+    },
+    appendEle() {
+      var arr = this.user.special_plan.map(item => {
+        return item.plan_id
+      })
+      console.log(arr)
+      this.userPlans = this.plans.filter(item => {
+        return !arr.includes(item.id)
+      })
+      if (this.userPlans.length < 1) {
+        return false
+      } else {
+        this.user.special_plan.push({ })
+      }
+    },
+    setSpecies() {
+      console.log(this.user)
+      putEdit(this.user).then(res => {
+        if (res.code === 200) {
+          this.dialogPlanVisible = false
+          this.getList()
+        }
+      })
+    },
+    cancelSpecies() {
+      this.dialogPlanVisible = false
+      this.getList()
     }
 
   }
