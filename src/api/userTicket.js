@@ -10,7 +10,7 @@ export function postAdd(data) {
 
 export function putEdit(data) {
   return request({
-    url: 'accountLog',
+    url: 'userTicket',
     method: 'put',
     data
   })

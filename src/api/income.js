@@ -40,10 +40,10 @@ export function delItem(params) {
   })
 }
 
-export function openCheck(params) {
+export function postSettle(data) {
   return request({
-    url: 'ticket/open',
-    method: 'put',
-    params
+    url: 'income/settle',
+    method: 'post',
+    data
   })
 }

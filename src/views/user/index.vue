@@ -287,7 +287,7 @@ export default {
       this.getList()
     },
     deleteEle(index) {
-      this.user.special_plan = this.userPlans.filter((item, key) => {
+      this.user.special_plan = this.user.special_plan.filter((item, key) => {
         return index !== key
       })
     }

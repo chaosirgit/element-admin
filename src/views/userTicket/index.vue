@@ -51,14 +51,14 @@
       <!--</template>-->
       <!--</el-table-column>-->
 
-      <!--<el-table-column align="center" label="操作" width="200">-->
-      <!--<template slot-scope="scope">-->
-      <!--<div class="operation-buttons">-->
-      <!--<el-button type="primary" @click="edit(scope.row, scope.$index)">编辑</el-button>-->
-      <!--<el-button type="danger" @click="del(scope.row, scope.$index)">删除</el-button>-->
-      <!--</div>-->
-      <!--</template>-->
-      <!--</el-table-column>-->
+      <el-table-column align="center" label="操作" width="200">
+        <template slot-scope="scope">
+          <div class="operation-buttons">
+            <el-button type="primary" @click="edit(scope.row, scope.$index)">调节水票</el-button>
+            <!--<el-button type="danger" @click="del(scope.row, scope.$index)">删除</el-button>-->
+          </div>
+        </template>
+      </el-table-column>
     </el-table>
 
     <pagination
@@ -89,12 +89,30 @@
         </el-button>
       </div>
     </el-dialog>
+
+    <el-dialog
+      title="调节水票"
+      :visible.sync="dialogEditVisible"
+      class="text-center"
+      center
+      width="30%"
+    >
+      <el-input-number v-model="userTicket.count" :min="0" :step="1" label="水票数量" />
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cancelUpdate()">
+          取消
+        </el-button>
+        <el-button type="primary" @click="updateTicket()">
+          确定
+        </el-button>
+      </div>
+    </el-dialog>
   </div>
 
 </template>
 
 <script>
-import { getList } from '@/api/userTicket'
+import { getList, putEdit } from '@/api/userTicket'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import Search from '@/components/Search'
 
@@ -118,11 +136,12 @@ export default {
       dialogTableVisible: false,
       dialogFormVisible: false,
       dialogHintVisible: false,
+      dialogEditVisible: false,
       dialogVisible: false,
       dialogStatus: 'create',
-      order: {
+      userTicket: {
         id: 0,
-        order_no: ''
+        count: 0
       },
       formLabelWidth: '120px'
     }
@@ -150,6 +169,23 @@ export default {
       this.listQuery = Object.assign(this.listQuery, query)
       console.log(this.listQuery)
       this.getList()
+    },
+    edit(item, index) {
+      this.dialogEditVisible = true
+      this.userTicket = item
+    },
+    cancelUpdate() {
+      this.userTicket = {}
+      this.dialogEditVisible = false
+      this.getList()
+    },
+    updateTicket() {
+      putEdit(this.userTicket).then(res => {
+        if (res.code === 200) {
+          this.dialogEditVisible = false
+          this.getList()
+        }
+      })
     }
 
   }

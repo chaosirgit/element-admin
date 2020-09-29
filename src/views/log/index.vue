@@ -130,7 +130,9 @@ export default {
         { id: 8, name: '结算收益帐号' },
         { id: 9, name: '收益帐号收益' },
         { id: 10, name: '分享收益' },
-        { id: 11, name: '获得积分' }
+        { id: 11, name: '获得积分' },
+        { id: 12, name: '取消订单水票返回' },
+        { id: 13, name: '调节水票' }
       ],
       options: null,
       sellers: null,
