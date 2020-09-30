@@ -98,6 +98,7 @@
       width="30%"
     >
       <el-input-number v-model="userTicket.count" :min="0" :step="1" label="水票数量" />
+      <el-input v-model="desc" placeholder="请输入备注" label="调节备注" style="margin-top: 10px" />
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancelUpdate()">
           取消
@@ -139,6 +140,7 @@ export default {
       dialogEditVisible: false,
       dialogVisible: false,
       dialogStatus: 'create',
+      desc: '',
       userTicket: {
         id: 0,
         count: 0
@@ -172,6 +174,7 @@ export default {
     },
     edit(item, index) {
       this.dialogEditVisible = true
+      this.desc = ''
       this.userTicket = item
     },
     cancelUpdate() {
@@ -180,7 +183,7 @@ export default {
       this.getList()
     },
     updateTicket() {
-      putEdit(this.userTicket).then(res => {
+      putEdit(Object.assign(this.userTicket, { desc: this.desc })).then(res => {
         if (res.code === 200) {
           this.dialogEditVisible = false
           this.getList()
