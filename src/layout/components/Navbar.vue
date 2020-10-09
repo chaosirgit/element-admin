@@ -77,12 +77,23 @@
         <div class="text-center" style="margin-top:10px">
           上传 Banner 图组<br>
         </div>
-        <div class="text-center" style="margin-top:20px;">
-          分享分佣比例:
-          <el-input v-model="ratio" :min="1" :max="100" type="number">
-            <template slot="append">%</template>
-          </el-input>
-        </div>
+        <el-form label-width="150px">
+          <el-form-item label="分享分佣比例" class="text-center" style="margin-top:20px;">
+            <el-input v-model="ratio" :min="1" :max="100" type="number">
+              <template slot="append">%</template>
+            </el-input>
+          </el-form-item>
+          <el-form-item label="新用户获得积分比例" class="text-center" style="margin-top:20px;">
+            <el-input v-model="new_integral" :min="1" :max="100" type="number">
+              <template slot="append">%</template>
+            </el-input>
+          </el-form-item>
+          <el-form-item label="老用户获得积分比例" class="text-center" style="margin-top:20px;">
+            <el-input v-model="old_integral" :min="1" :max="100" type="number">
+              <template slot="append">%</template>
+            </el-input>
+          </el-form-item>
+        </el-form>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogSettingVisible = false">取 消</el-button>
@@ -143,7 +154,9 @@ export default {
       current: {},
       redirect: '',
       ratio: 0,
-      urlType: 'url'
+      urlType: 'url',
+      new_integral: 0,
+      old_integral: 0
     }
   },
   methods: {
@@ -160,6 +173,8 @@ export default {
         if (res.code === 200 && res.data.banner !== undefined) {
           this.banner = JSON.parse(res.data.banner)
           this.ratio = res.data.income_ratio
+          this.new_integral = res.data.new_integral
+          this.old_integral = res.data.old_integral
         }
       })
     },
@@ -181,7 +196,7 @@ export default {
     },
     updateData() {
       this.$loading()
-      postAdd({ banner: JSON.stringify(this.banner), income_ratio: this.ratio }).then(res => {
+      postAdd({ banner: JSON.stringify(this.banner), income_ratio: this.ratio, new_integral: this.new_integral, old_integral: this.old_integral }).then(res => {
         this.$loading().close()
         if (res.code === 200) {
           this.dialogSettingVisible = false
