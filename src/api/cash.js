@@ -8,14 +8,6 @@ export function postAdd(data) {
   })
 }
 
-export function putEdit(data) {
-  return request({
-    url: 'ticket',
-    method: 'put',
-    data
-  })
-}
-
 export function getList(params) {
   return request({
     url: 'cash',
@@ -24,34 +16,18 @@ export function getList(params) {
   })
 }
 
-export function getAll(params) {
+export function postUserAdd(data) {
   return request({
-    url: 'ticket/all',
+    url: 'userCash',
+    method: 'post',
+    data
+  })
+}
+
+export function getUserList(params) {
+  return request({
+    url: 'userCash',
     method: 'get',
-    params
-  })
-}
-
-export function ticketRelation(params) {
-  return request({
-    url: 'ticket/relation',
-    method: 'put',
-    params
-  })
-}
-
-export function delItem(params) {
-  return request({
-    url: 'ticket',
-    method: 'delete',
-    params
-  })
-}
-
-export function openCheck(params) {
-  return request({
-    url: 'ticket/open',
-    method: 'put',
     params
   })
 }

@@ -170,12 +170,20 @@ export const constantRoutes = [
   {
     path: '/cash',
     component: Layout,
+    name: '提现管理',
+    meta: { title: '提现管理', icon: 'el-icon-s-finance' },
     children: [
       {
         path: 'list',
-        name: '提现管理',
+        name: '配送员提现',
         component: () => import('@/views/cash/index'),
-        meta: { title: '提现管理', icon: 'el-icon-s-finance' }
+        meta: { title: '配送员提现', icon: 'el-icon-s-finance' }
+      },
+      {
+        path: 'user',
+        name: '用户提现',
+        component: () => import('@/views/cash/user'),
+        meta: { title: '用户提现', icon: 'el-icon-s-finance' }
       }
     ]
   },

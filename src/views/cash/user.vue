@@ -31,7 +31,7 @@
           {{ scope.row.id }}
         </template>
       </el-table-column>
-      <el-table-column label="快递员手机号">
+      <el-table-column label="手机号">
         <template slot-scope="scope">
           {{ scope.row.phone }}
         </template>
@@ -141,7 +141,7 @@
 </template>
 
 <script>
-import { getList, postAdd } from '@/api/cash'
+import { getUserList, postUserAdd } from '@/api/cash'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import Search from '@/components/Search'
 
@@ -198,7 +198,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      getList(this.listQuery).then(response => {
+      getUserList(this.listQuery).then(response => {
         this.total = response.data.total
         this.list = response.data.data
         this.listLoading = false
@@ -215,7 +215,7 @@ export default {
       this.cash = item
     },
     postCheck() {
-      postAdd({ id: this.cash.id, check_status: 1 }).then(res => {
+      postUserAdd({ id: this.cash.id, check_status: 1 }).then(res => {
         if (res.code === 200) {
           this.dialogHintVisible = false
           this.getList()
@@ -227,7 +227,7 @@ export default {
       this.cash = item
     },
     noCheckData() {
-      postAdd({ id: this.cash.id, check_status: 2, desc: this.cash.desc }).then(res => {
+      postUserAdd({ id: this.cash.id, desc: this.cash.desc, check_status: 2 }).then(res => {
         if (res.code === 200) {
           this.dialogFormVisible = false
           this.getList()
