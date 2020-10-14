@@ -60,9 +60,19 @@
           {{ scope.row.integral }}
         </template>
       </el-table-column>
+      <el-table-column label="绑定水站">
+        <template slot-scope="scope">
+          {{ scope.row.site_name }}
+        </template>
+      </el-table-column>
       <el-table-column label="新老用户">
         <template slot-scope="scope">
           {{ scope.row.is_old === 1 ? '老用户' : '新用户' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="备注">
+        <template slot-scope="scope">
+          {{ scope.row.desc }}
         </template>
       </el-table-column>
       <el-table-column align="center" label="创建时间" width="200">
@@ -118,9 +128,30 @@
               <el-input-number v-model="user.pail_count" :precision="0" :step="1" :min="0" style="width: 195px;" />
             </el-form-item>
           </el-col>
+          <el-col :span="12">
+            <el-form-item label="新老用户" :label-width="formLabelWidth">
+              <el-radio v-model="user.is_old" :label="0">新用户</el-radio>
+              <el-radio v-model="user.is_old" :label="1">老用户</el-radio>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row style="margin-bottom: 20px">
+          <el-col :span="12">
+            <el-form-item label="绑定水站" :label-width="formLabelWidth">
+              <el-select v-model="user.site_id" placeholder="请选择">
+                <el-option
+                  v-for="item in sites"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
           <!--<el-col :span="12">-->
-          <!--<el-form-item label="用户押金" :label-width="formLabelWidth">-->
-          <!--<el-input-number v-model="user.deposit" :precision="2" :step="0.1" :min="0.00" style="width: 195px;" />-->
+          <!--<el-form-item label="新老用户" :label-width="formLabelWidth">-->
+          <!--<el-radio v-model="user.is_old" :label="0">新用户</el-radio>-->
+          <!--<el-radio v-model="user.is_old" :label="1">老用户</el-radio>-->
           <!--</el-form-item>-->
           <!--</el-col>-->
         </el-row>
@@ -159,6 +190,7 @@ import { getList, postAdd, putEdit } from '@/api/consumer'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import Search from '@/components/Search'
 import { getAll as planAll } from '@/api/plan'
+import { getAll as siteAll } from '@/api/site'
 
 export default {
   components: { Pagination, Search },
@@ -187,7 +219,9 @@ export default {
         phone: '',
         deposit: 0,
         pail_count: 0,
-        special_plan: []
+        special_plan: [],
+        site_id: '',
+        is_old: 0
       },
       sites: [],
       formLabelWidth: '120px'
@@ -203,6 +237,7 @@ export default {
   mounted() {
     this.fetchData()
     this.fetchPlans()
+    this.fetchSites()
   },
   methods: {
     getList() {
@@ -217,6 +252,13 @@ export default {
       planAll().then(res => {
         if (res.code === 200) {
           this.plans = res.data
+        }
+      })
+    },
+    fetchSites() {
+      siteAll().then(res => {
+        if (res.code === 200) {
+          this.sites = res.data
         }
       })
     },
@@ -243,7 +285,9 @@ export default {
       console.log(item, _index)
       this.dialogFormVisible = true
       this.dialogStatus = 'update'
+      item.site_id = item.site_id === 0 ? '' : item.site_id
       this.user = item
+      // this.user.is_old = this.user.is_old + ''
     },
     updateData() {
       console.log(this.user)
