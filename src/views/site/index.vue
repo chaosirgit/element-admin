@@ -230,7 +230,7 @@
 
       <div v-for="(item , index) in site.product_stock" :key="index">
         <el-input v-model="item.stock" placeholder="请输入库存数量" class="input-with-select">
-          <el-select slot="prepend" v-model="item.product_id" placeholder="请选择" style="width: 150px;">
+          <el-select slot="prepend" v-model="item.product_id" placeholder="请选择" style="width: 150px;" @change="selectProduct">
             <el-option v-for="product in siteProducts" :key="product.id" :label="product.name" :value="product.id" />
           </el-select>
           <el-button slot="append" icon="el-icon-delete" @click="deleteEle(index)" />
@@ -472,15 +472,6 @@ export default {
       this.dialogStockVisible = true
     },
     appendEle() {
-      // var arr
-      //
-      // if (this.site.product_stock.length > 0) {
-      //   arr = this.site.product_stock.map(item => {
-      //     return item.product_id
-      //   })
-      // } else {
-      //   arr = []
-      // }
       var arr = this.site.product_stock.map(item => {
         return item.product_id
       })
@@ -493,6 +484,20 @@ export default {
       } else {
         this.site.product_stock.push({ })
       }
+    },
+    selectProduct() {
+      var arr = this.site.product_stock.map(item => {
+        return item.product_id
+      })
+      console.log(arr)
+      this.siteProducts = this.products.filter(item => {
+        return !arr.includes(item.id)
+      })
+      // if (this.siteProducts.length < 1) {
+      //   return false
+      // } else {
+      //   this.site.product_stock.push({ })
+      // }
     },
     deleteEle(index) {
       this.site.product_stock = this.site.product_stock.filter((item, key) => {
