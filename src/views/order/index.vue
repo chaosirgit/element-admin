@@ -12,6 +12,8 @@
       fit
       highlight-current-row
       style="margin-top: 10px;"
+      show-summary
+      :summary-method="getSummaries"
     >
       <el-table-column type="expand" label="+">
         <template slot-scope="props">
@@ -105,6 +107,11 @@
       <el-table-column label="订单总额" align="center">
         <template slot-scope="scope">
           {{ scope.row.total_amount }}
+        </template>
+      </el-table-column>
+      <el-table-column label="总数量" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.total_count }}
         </template>
       </el-table-column>
       <el-table-column label="分配水站" align="center">
@@ -222,9 +229,12 @@ export default {
       dialogHintVisible: false,
       dialogVisible: false,
       dialogStatus: 'create',
+      total_count: 0,
+      total_amount: '0.00',
       order: {
         id: 0,
-        order_no: ''
+        order_no: '',
+        total_count: 0
       },
       formLabelWidth: '120px'
     }
@@ -244,7 +254,16 @@ export default {
       this.listLoading = true
       getList(this.listQuery).then(response => {
         this.total = response.data.total
-        this.list = response.data.data
+        this.total_count = response.data.appends.total_count
+        this.total_amount = response.data.appends.total_amount
+        this.list = response.data.data.map(item => {
+          item.total_count = item.order_items.map(orderItem => {
+            return orderItem.count
+          }).reduce((total_count, count) => {
+            return total_count + count
+          })
+          return item
+        })
         this.listLoading = false
       })
     },
@@ -252,6 +271,23 @@ export default {
       this.listQuery = Object.assign(this.listQuery, query)
       console.log(this.listQuery)
       this.getList()
+    },
+    getSummaries(param) {
+      console.log(param)
+      const { columns } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '合计'
+        } else if (index === 4) {
+          sums[index] = this.total_amount
+        } else if (index === 5) {
+          sums[index] = this.total_count
+        } else {
+          sums[index] = ''
+        }
+      })
+      return sums
     }
 
   }

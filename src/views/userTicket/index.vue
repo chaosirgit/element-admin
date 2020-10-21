@@ -18,6 +18,16 @@
           {{ scope.row.id }}
         </template>
       </el-table-column>
+      <el-table-column align="center" label="头像" width="95">
+        <template slot-scope="scope">
+          <el-avatar :size="50" :src="scope.row.user.avatar" />
+        </template>
+      </el-table-column>
+      <el-table-column label="昵称">
+        <template slot-scope="scope">
+          {{ scope.row.user.nickname }}
+        </template>
+      </el-table-column>
       <el-table-column label="用户手机" align="center">
         <template slot-scope="scope">
           {{ scope.row.phone }}

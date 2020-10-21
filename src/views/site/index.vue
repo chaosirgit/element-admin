@@ -62,9 +62,10 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="操作" width="200">
+      <el-table-column align="center" label="操作" width="300">
         <template slot-scope="scope">
           <div class="operation-buttons">
+            <el-button type="warning" @click="productStock(scope.row, scope.$index)">产品库存</el-button>
             <el-button type="primary" @click="edit(scope.row, scope.$index)">编辑</el-button>
             <el-button type="danger" @click="del(scope.row, scope.$index)">删除</el-button>
           </div>
@@ -220,6 +221,26 @@
       </template>
 
     </el-dialog>
+
+    <el-dialog
+      title="产品库存"
+      :visible.sync="dialogStockVisible"
+    >
+      <el-button size="medium" icon="el-icon-plus" type="primary" @click="appendEle" />
+
+      <div v-for="(item , index) in site.product_stock" :key="index">
+        <el-input v-model="item.stock" placeholder="请输入库存数量" class="input-with-select">
+          <el-select slot="prepend" v-model="item.product_id" placeholder="请选择" style="width: 150px;">
+            <el-option v-for="product in siteProducts" :key="product.id" :label="product.name" :value="product.id" />
+          </el-select>
+          <el-button slot="append" icon="el-icon-delete" @click="deleteEle(index)" />
+        </el-input>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cancelSpecies">取 消</el-button>
+        <el-button type="primary" @click="setSpecies">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 
 </template>
@@ -229,6 +250,7 @@ import { getList, postAdd, putEdit, delItem } from '@/api/site'
 import { getAll as delivererAllList } from '@/api/deliverer'
 import { getAll as sellerAllList } from '@/api/seller'
 import { getAll as incomeAllList } from '@/api/income'
+import { getAll as productAllList } from '@/api/product'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import Search from '@/components/Search'
 import { AMapManager } from 'vue-amap'
@@ -269,11 +291,14 @@ export default {
       sellers: null,
       deliverers: [],
       incomes: [],
+      products: [],
+      siteProducts: [],
       dialogTableVisible: false,
       dialogFormVisible: false,
       dialogHintVisible: false,
       dialogVisible: false,
       dialogAMapVisible: false,
+      dialogStockVisible: false,
       dialogStatus: 'create',
       site: {
         id: 0,
@@ -285,7 +310,8 @@ export default {
         latitude: '',
         op_name: '',
         op_id: 0,
-        income_id: 0
+        income_id: 0,
+        product_stock: []
       },
       formLabelWidth: '120px'
     }
@@ -299,6 +325,7 @@ export default {
   },
   mounted() {
     this.fetchData()
+    this.fetchProducts()
   },
   methods: {
     getList() {
@@ -331,6 +358,11 @@ export default {
     fetchIncomes() {
       incomeAllList().then(res => {
         this.incomes = res.data
+      })
+    },
+    fetchProducts() {
+      productAllList().then(res => {
+        this.products = res.data
       })
     },
     handlerCreate() {
@@ -432,6 +464,53 @@ export default {
       if (pois.length > 0) {
         this.mapCenter = [pois[0].lng, pois[0].lat]
       }
+    },
+    productStock(item, index) {
+      this.site = item
+      console.log(this.site)
+      this.siteProducts = this.products
+      this.dialogStockVisible = true
+    },
+    appendEle() {
+      // var arr
+      //
+      // if (this.site.product_stock.length > 0) {
+      //   arr = this.site.product_stock.map(item => {
+      //     return item.product_id
+      //   })
+      // } else {
+      //   arr = []
+      // }
+      var arr = this.site.product_stock.map(item => {
+        return item.product_id
+      })
+      console.log(arr)
+      this.siteProducts = this.products.filter(item => {
+        return !arr.includes(item.id)
+      })
+      if (this.siteProducts.length < 1) {
+        return false
+      } else {
+        this.site.product_stock.push({ })
+      }
+    },
+    deleteEle(index) {
+      this.site.product_stock = this.site.product_stock.filter((item, key) => {
+        return index !== key
+      })
+    },
+    cancelSpecies() {
+      this.dialogStockVisible = false
+      this.getList()
+    },
+    setSpecies() {
+      console.log(this.site)
+      putEdit(this.site).then(res => {
+        if (res.code === 200) {
+          this.dialogStockVisible = false
+          this.getList()
+        }
+      })
     }
   }
 }
