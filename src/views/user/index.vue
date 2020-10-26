@@ -148,12 +148,11 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <!--<el-col :span="12">-->
-          <!--<el-form-item label="新老用户" :label-width="formLabelWidth">-->
-          <!--<el-radio v-model="user.is_old" :label="0">新用户</el-radio>-->
-          <!--<el-radio v-model="user.is_old" :label="1">老用户</el-radio>-->
-          <!--</el-form-item>-->
-          <!--</el-col>-->
+          <el-col :span="12">
+            <el-form-item label="备注" :label-width="formLabelWidth">
+              <el-input v-model="user.desc" />
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -221,7 +220,8 @@ export default {
         pail_count: 0,
         special_plan: [],
         site_id: '',
-        is_old: 0
+        is_old: 0,
+        desc: ''
       },
       sites: [],
       formLabelWidth: '120px'

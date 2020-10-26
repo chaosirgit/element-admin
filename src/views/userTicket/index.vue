@@ -48,7 +48,11 @@
           <el-tag effect="dark" style="border: 0;" color="#000000">{{ scope.row.count }}</el-tag>
         </template>
       </el-table-column>
-
+      <el-table-column label="用户地址" align="center">
+        <template slot-scope="scope">
+          <el-tag effect="dark" style="border: 0;" color="#000000">{{ scope.row.user_address_default.format_address }}</el-tag>
+        </template>
+      </el-table-column>
       <!--<el-table-column class-name="status-col" label="状态" width="110" align="center">-->
       <!--<template slot-scope="scope">-->
       <!--<el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>-->
