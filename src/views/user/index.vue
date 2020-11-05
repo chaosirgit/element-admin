@@ -70,6 +70,11 @@
           {{ scope.row.is_old === 1 ? '老用户' : '新用户' }}
         </template>
       </el-table-column>
+      <el-table-column label="推荐人">
+        <template slot-scope="scope">
+          {{ scope.row.parent_phone }}
+        </template>
+      </el-table-column>
       <el-table-column label="备注">
         <template slot-scope="scope">
           {{ scope.row.desc }}

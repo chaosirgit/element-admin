@@ -150,14 +150,13 @@
         </template>
       </el-table-column>
 
-      <!--<el-table-column align="center" label="操作" width="200">-->
-      <!--<template slot-scope="scope">-->
-      <!--<div class="operation-buttons">-->
-      <!--<el-button type="primary" @click="edit(scope.row, scope.$index)">编辑</el-button>-->
-      <!--<el-button type="danger" @click="del(scope.row, scope.$index)">删除</el-button>-->
-      <!--</div>-->
-      <!--</template>-->
-      <!--</el-table-column>-->
+      <el-table-column align="center" label="操作" width="200">
+        <template slot-scope="scope">
+          <div class="operation-buttons">
+            <el-button v-if="scope.row.delivery_way === 2" type="primary" @click="express(scope.row, scope.$index)">发货</el-button>
+          </div>
+        </template>
+      </el-table-column>
     </el-table>
 
     <pagination
@@ -170,22 +169,28 @@
     />
 
     <el-dialog
-      title="提醒 "
-      :visible.sync="dialogHintVisible"
-      class="text-center"
-      center
-      width="30%"
+      title="发货"
+      :visible.sync="dialogExpressVisible"
     >
-      <span class="text-center">
-        此操作会直接删除商品，可能会产生数据关联错误，确定删除吗？
-      </span>
+      <el-form
+        :model="order"
+      >
+        <el-row style="margin-bottom: 20px">
+          <el-col :span="12">
+            <el-form-item label="快递名称" :label-width="formLabelWidth">
+              <el-input v-model="order.express_name" autocomplete="off" style="width: 195px;" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="快递编号" :label-width="formLabelWidth">
+              <el-input v-model="order.express_no" autocomplete="off" style="width: 195px;" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogHintVisible = false">
-          取消
-        </el-button>
-        <el-button type="primary" @click="delData()">
-          确定
-        </el-button>
+        <el-button @click="dialogExpressVisible = false;getList()">取 消</el-button>
+        <el-button type="primary" @click="postExpress()">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -193,7 +198,7 @@
 </template>
 
 <script>
-import { getList } from '@/api/order'
+import { getList, putEdit } from '@/api/order'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import Search from '@/components/Search'
 
@@ -228,13 +233,16 @@ export default {
       dialogFormVisible: false,
       dialogHintVisible: false,
       dialogVisible: false,
+      dialogExpressVisible: false,
       dialogStatus: 'create',
       total_count: 0,
       total_amount: '0.00',
       order: {
         id: 0,
         order_no: '',
-        total_count: 0
+        total_count: 0,
+        express_name: '',
+        express_no: ''
       },
       formLabelWidth: '120px'
     }
@@ -288,6 +296,18 @@ export default {
         }
       })
       return sums
+    },
+    express(item, index) {
+      this.dialogExpressVisible = true
+      this.order = item
+    },
+    postExpress() {
+      putEdit(this.order).then(res => {
+        if (res.code === 200) {
+          this.dialogExpressVisible = false
+          this.getList()
+        }
+      })
     }
 
   }

@@ -279,7 +279,7 @@
           </el-col>
         </el-row>
         <el-row style="margin-bottom: 20px">
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="排序权重" :label-width="formLabelWidth">
               <el-tooltip class="item" effect="dark" content="数字越大排序越前" placement="right-start">
                 <el-input-number v-model="product.sort" autocomplete="off" />
@@ -287,21 +287,46 @@
 
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="配送费" :label-width="formLabelWidth">
               <el-input-number v-model="product.delivery_price" autocomplete="off" :precision="2" :step="0.1" :min="0.00" />
             </el-form-item>
           </el-col>
+          <el-col :span="8">
+            <el-form-item label="配送方式" :label-width="formLabelWidth">
+              <el-select
+                v-model="product.delivery_way"
+                filterable
+                placeholder="请选择"
+              >
+                <el-option
+                  label="即时配送"
+                  :value="1"
+                />
+                <el-option
+                  label="快递配送"
+                  :value="2"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row style="margin-bottom: 20px">
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="产品单位" :label-width="formLabelWidth">
               <el-input v-model="product.quantifier" autocomplete="off" style="width: 195px;" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="库存" :label-width="formLabelWidth">
               <el-input-number v-model="product.stock" :precision="0" :step="1" style="width: 195px;" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="抵扣比例" :label-width="formLabelWidth">
+              <el-input v-model="product.integer_radio" :min="1" :max="100" type="number" style="width: 195px;">
+                <template slot="append">%</template>
+              </el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -394,8 +419,10 @@ export default {
         is_up: 0,
         tags: [],
         delivery_price: 0,
+        delivery_way: '',
         quantifier: '',
-        stock: 0
+        stock: 0,
+        integer_radio: 0
       },
       tag: '',
       formLabelWidth: '120px'
