@@ -47,3 +47,19 @@ export function getAll(params) {
     params
   })
 }
+
+export function getTicketCount(data) {
+  return request({
+    url: 'getTicketCount',
+    method: 'post',
+    data
+  })
+}
+
+export function generateOrder(data) {
+  return request({
+    url: 'generateOrder',
+    method: 'post',
+    data
+  })
+}

@@ -4,6 +4,19 @@
       :status-list="statusList"
       @search="fetchData"
     />
+    <el-row>
+      <el-col>
+        <el-button
+          class="filter-item"
+          style="margin-left: 10px;"
+          type="primary"
+          icon="el-icon-plus"
+          @click="orderCreate"
+        >
+          代客下单
+        </el-button>
+      </el-col>
+    </el-row>
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -193,12 +206,82 @@
         <el-button type="primary" @click="postExpress()">确 定</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog
+      title="代客下单"
+      :visible.sync="dialogOrder"
+    >
+
+      <el-form
+        :model="generateOrder"
+      >
+        <el-row style="margin-bottom: 20px">
+          <el-col :span="12">
+            <el-form-item label="用户手机" :label-width="formLabelWidth">
+              <el-input v-model="generateOrder.phone" autocomplete="off" style="width: 195px;" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="选择商品" :label-width="formLabelWidth">
+              <el-select
+                v-model="generateOrder.product_id"
+                filterable
+                placeholder="请选择"
+              >
+                <el-option
+                  v-for="item in products"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row style="margin-bottom: 20px">
+          <el-col :span="12">
+            <el-form-item label="下单数量" :label-width="formLabelWidth">
+              <el-input v-model="generateOrder.count" autocomplete="off" style="width: 195px;" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="选择地址" :label-width="formLabelWidth">
+              <el-select
+                v-model="generateOrder.user_address_id"
+                filterable
+                placeholder="请选择"
+              >
+                <el-option
+                  v-for="item in user_address"
+                  :key="item.id"
+                  :label="item.format_address"
+                  :value="item.id"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="可用水票数量" :label-width="formLabelWidth">
+              <el-input v-model="generateOrder.ticket_count" autocomplete="off" style="width: 195px;" disabled />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogOrder = false;getList()">取 消</el-button>
+        <el-button type="success" @click="getTicketCount()">生成可用水票与用户地址</el-button>
+        <el-button type="primary" @click="postGenerateOrder()">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 
 </template>
 
 <script>
-import { getList, putEdit } from '@/api/order'
+import { getList, putEdit, getTicketCount, generateOrder } from '@/api/order'
+import { getList as getProductList } from '@/api/product'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import Search from '@/components/Search'
 
@@ -234,6 +317,7 @@ export default {
       dialogHintVisible: false,
       dialogVisible: false,
       dialogExpressVisible: false,
+      dialogOrder: false,
       dialogStatus: 'create',
       total_count: 0,
       total_amount: '0.00',
@@ -244,6 +328,15 @@ export default {
         express_name: '',
         express_no: ''
       },
+      generateOrder: {
+        phone: '',
+        product_id: '',
+        count: 0,
+        ticket_count: 0,
+        user_address_id: ''
+      },
+      products: [],
+      user_address: [],
       formLabelWidth: '120px'
     }
   },
@@ -305,6 +398,33 @@ export default {
       putEdit(this.order).then(res => {
         if (res.code === 200) {
           this.dialogExpressVisible = false
+          this.getList()
+        }
+      })
+    },
+    orderCreate() {
+      this.dialogOrder = true
+      this.user_address = []
+      this.generateOrder = { ticket_count: 0 }
+      getProductList({ limit: 1000 }).then(res => {
+        if (res.code === 200) {
+          this.products = res.data.data
+        }
+      })
+    },
+    getTicketCount() {
+      getTicketCount(this.generateOrder).then(res => {
+        if (res.code === 200) {
+          console.log(res)
+          this.generateOrder.ticket_count = res.data.ticket_count
+          this.user_address = res.data.user_address
+        }
+      })
+    },
+    postGenerateOrder() {
+      generateOrder(this.generateOrder).then(res => {
+        if (res.code === 200) {
+          this.dialogOrder = false
           this.getList()
         }
       })
