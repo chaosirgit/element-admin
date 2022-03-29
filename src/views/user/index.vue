@@ -80,6 +80,11 @@
           {{ scope.row.desc }}
         </template>
       </el-table-column>
+      <el-table-column label="邀请人数">
+        <template slot-scope="scope">
+          {{ scope.row.parent_count }}
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="创建时间" width="200">
         <template slot-scope="scope">
           <i class="el-icon-time" />
@@ -226,7 +231,8 @@ export default {
         special_plan: [],
         site_id: '',
         is_old: 0,
-        desc: ''
+        desc: '',
+        parent_count: 0
       },
       sites: [],
       formLabelWidth: '120px'
